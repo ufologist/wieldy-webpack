@@ -1,0 +1,23 @@
+{
+  "name": "wieldy-webpack-simple",
+  "version": "0.1.0",
+  "description": "wieldy-webpack 简单示例项目",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "webpack-dev-server --inline --open --progress --colors --profile --env.__mode__=dev",
+    "build": "webpack --progress --hide-modules",
+    "deploy": "webpack --progress --hide-modules --env.__deploy__",
+    "analysis": "webpack --progress --profile --json > stats.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sun",
+  "license": "MIT",
+  "dependencies": {
+    "ionicons": "^3.0.0",
+    "jquery": "^3.2.1",
+    "normalize.css": "^7.0.0"
+  },
+  "devDependencies": {
+    "wieldy-webpack": "1.x"
+  }
+}

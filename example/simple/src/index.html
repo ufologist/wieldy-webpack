@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>wieldy-webpack 简单示例项目</title>
+    <script>
+    // 在 HTML script 中获取 env.js 中定义的环境配置
+    // 注意: 如果是字符串需要用引号引起来
+    var envPublicPath = '<%= htmlWebpackPlugin.options.env.__public_path__ %>';
+    </script>
+</head>
+<body class="body--index">
+    <h1 class="header">wieldy-webpack 简单示例项目</h1>
+    <ul>
+        <li>只有一个入口</li>
+        <!-- 在 HTML 中可以获取 env.js 中定义的环境配置 -->
+        <li>本地开发服务器的端口: <%= htmlWebpackPlugin.options.env.__port__ %></li>
+    </ul>
+    <h2>静态引用文件路径示例</h2>
+    <div>
+        <img src="index/res/avatar.png" width="50" height="50">
+    </div>
+    <h2>静态引用 npm 模块中的文件路径示例</h2>
+    <div>
+        <img src="~ionicons/dist/svg/ios-sunny.svg" width="50" height="50">
+    </div>
+    <h2>动态引用文件路径示例</h2>
+    <div class="js-file-path"></div>
+    <h2>组件示例</h2>
+    <ul class="box-list">
+        <li class="box-list__item">flex box</li>
+        <li class="box-list__item">flex box</li>
+        <li class="box-list__item">flex box</li>
+        <li class="box-list__item">flex box</li>
+    </ul>
+    <h2>调用接口(Mock)示例</h2>
+    <div class="js-http-api"></div>
+    <h2>懒加载模块示例</h2>
+    <div class="js-lazy-mod">
+        <button class="js-lazy-mod-btn">点击加载模块</button>
+    </div>
+</body>
+</html>

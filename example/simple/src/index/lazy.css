@@ -1,0 +1,5 @@
+.lazy {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    background-color: rgba(255,221,118,0.8);
+}

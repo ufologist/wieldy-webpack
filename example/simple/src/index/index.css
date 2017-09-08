@@ -1,0 +1,20 @@
+/* 导入 npm 模块中的 css 文件 */
+@import url(~normalize.css/normalize.css);
+/* 使用 alias 绝对路径导入文件 */
+@import url(~@/lib/app.css);
+
+.body--index {
+    background-image: url(res/pattern-ufo.png);
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    background-size: 281px 125px;
+}
+
+.header {
+    padding-left: 40px;
+    /* 引用 npm 模块中的文件 */
+    background-image: url(~ionicons/dist/svg/ios-partly-sunny-outline.svg);
+    background-repeat: no-repeat;
+    background-size: 36px 36px;
+    background-position: 2px center;
+}
