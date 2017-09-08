@@ -1,5 +1,7 @@
 var path = require('path');
 
+var mockHttpApi = require('mock-http-api');
+
 var webpack = require('webpack');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -65,7 +67,6 @@ var mergeWpkConfig = require('./merge-wpk-config.js');
 var chunkNameResolver = require('./chunk-name-resolver.js');
 var getDefinePlugin = require('./get-define-plugin.js');
 var addDeployPlugin = require('./add-deploy-plugin.js');
-var mockHttpApi = require('backend-tpl-server/src/mock-http-api.js');
 
 var pkg = require(process.cwd() + '/package.json');
 
@@ -203,7 +204,7 @@ function getWebpackConfig(env) {
             overlay: true,
 
             setup: function(app) {
-                // Mock Server 功能通过 backend-tpl-server 的模块来实现
+                // Mock Server 功能通过 mock-http-api 的模块来实现
                 // 只需要在 mock/http 文件夹中放置 mock 配置即可
                 mockHttpApi(app);
             }

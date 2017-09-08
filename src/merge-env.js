@@ -4,6 +4,7 @@ var fs = require('fs');
 var merge = require('merge');
 
 var util = require('./util.js');
+var pkg = require(process.cwd() + '/package.json');
 
 /**
  * 合并环境配置
@@ -56,7 +57,7 @@ function mergeEnv(env) {
 /**
  * 处理 __public_path__ 的配置
  * 
- * 一般我们只需要配置 __cdn_root_path__, 会根据 __dir__ 来生成 __public_path__,
+ * 一般我们只需要配置 __cdn_root_path__, 会根据 __dir__ 或者 pkg.name 来生成 __public_path__,
  * 但我们也可以强制设置 __public_path__ 来直接决定 publicPath 的配置
  * 
  * @param {object} env 
@@ -65,7 +66,7 @@ function mergeEnv(env) {
 function proccessPublicPath(env) {
     if (!env.__public_path__ && env.__cdn_root_path__) {
         env.__cdn_root_path__ = util.endsWithForwardSlash(env.__cdn_root_path__);
-        env.__public_path__ = env.__cdn_root_path__ + env.__dir__;
+        env.__public_path__ = env.__cdn_root_path__ + (env.__dir__ || pkg.name);
     }
 
     if (!env.__public_path__) {
