@@ -1,7 +1,7 @@
 {
-  "name": "wieldy-webpack-example-simple",
+  "name": "wieldy-webpack-example-multiple-entry",
   "version": "0.1.0",
-  "description": "wieldy-webpack 简单示例项目",
+  "description": "wieldy-webpack 多入口示例项目",
   "main": "webpack.config.js",
   "scripts": {
     "start": "webpack-dev-server --inline --open --progress --colors --profile --env.__mode__=dev",
@@ -13,7 +13,6 @@
   "author": "Sun",
   "license": "MIT",
   "dependencies": {
-    "ionicons": "^3.0.0",
     "jquery": "^3.2.1",
     "normalize.css": "^7.0.0"
   },
