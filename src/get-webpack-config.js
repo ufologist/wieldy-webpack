@@ -5,58 +5,6 @@ var mockHttpApi = require('mock-http-api');
 var webpack = require('webpack');
 var CleanWebpackPlugin = require('clean-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-// 提取出 webpack 的 runtime/manifest 的方式
-// 1. 将整个 manifest chunk inline 到 HTML 中
-//    需要先 split out the runtime code, 通过 CommonsChunkPlugin 将 manifest chunk 提取出来
-//    new webpack.optimize.CommonsChunkPlugin({
-//        name: 'manifest',
-//        filename: wpkConfig.output.chunk + '/' + wpkConfig.output.jsFilename,
-//        minChunks: Infinity
-//    })
-//    这样 manifest 会包含 webpackBootstrap 的代码, 但其中变的部分其实很少, 还有优化空间,
-//    * inline-manifest-webpack-plugin
-//      还需要在 HTML 中使用
-//      <%= htmlWebpackPlugin.files.webpackManifest %> 来输出 manifest 分块的代码
-//    * inline-chunks-html-webpack-plugin
-//      直接找到需要 inline 的 chunk 的 HTML 标签, 然后替换掉标签的内容, 因此无需自己再指定输出
-// 2. 将 chunk map inline 到 HTML 中
-//    inline-chunk-manifest-html-webpack-plugin 将每个 chunk ID 和文件名映射起来提取出来,
-//    然后修改 webpackBootstrap 直接使用这个映射, 这样就可以将 webpackBootstrap 模块合并到 vendor 去,
-//    不需要单独提取出 manifest chunk 了.
-//    new InlineChunkManifestHtmlWebpackPlugin({
-//        dropAsset: true
-//    })
-//    得到的结果类似于
-//    script.src = __webpack_require__.p + window["webpackManifest"][chunkId];
-//    但是每次其他模块的代码, 竟然影响到了 vendor 的 hash?
-//    因为 vendor 原本包含了 manifest 的内容, 代码修改 manifest 的内容肯定会变, chunk 的 hash 也就变了,
-//    但是 InlineChunkManifestHtmlWebpackPlugin 替换了 vendor 文件的内容后, 没有重新计算 hash
-//    因此前后生成的 vendor.js 文件的内容是一样的, 但是 hash 却不一样
-//
-//    注意 webpackBootstrap 代码可能会变化的地方
-//    1. 当 chunk 数量变化时会造成 installedChunks 变化
-//       以下途径会产生新的 chunk
-//       * entry 定义的每一个入口
-//       * 动态 import 或者 require.ensure 产生的异步分块
-//       * CommonsChunkPlugin 提取的通用分块, 如果只提取了 vendor 分块,
-//         就不会 installedChunks 的数量, 因为 vendor 作为初始分块, 不计入 installedChunks 中
-//       var installedChunks = {
-//           // 3 为 chunk 的总数
-//           3: 0
-//       };
-//    2. 加载异步分块的方法中放置了每个分块对应的文件路径
-//       __webpack_require__.e
-//       // 分块文件 URL
-//       script.src = __webpack_require__.p + "chunk/"
-//                  // 分块ID与分块名称的映射: 分块ID 定义在 `webpackJsonp([2]`
-//                  // 先通过 chunkId (分块ID是一个索引数字), 找出 chunk 的名称
-//                  // 如果是动态 import 进来的分块, 没有对其命名的话, 就不会出现在这个映射中,
-//                  // 则直接使用 chunkId 作为分块名称
-//                  + ({"0":"abc","1":"ddd","2":"index"}[chunkId]||chunkId)
-//                  // 分块ID与分块 hash 的映射
-//                  + "-" + {"0":"2356817","1":"427f17d","2":"2daed49"}[chunkId] + ".js";
-//    3. 所有静态资源的根路径
-//       __webpack_require__.p = "//cdn.com/path/";
 var InlineChunksHtmlWebpackPlugin = require('inline-chunks-html-webpack-plugin');
 // 如果只是单纯的复制资源, 可以使用 copy-webpack-plugin 插件
 // 例如 { context: 'from/directory', from: '**/*' }

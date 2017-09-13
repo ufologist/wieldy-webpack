@@ -57,16 +57,16 @@ function mergeEnv(env) {
 /**
  * 处理 __public_path__ 的配置
  * 
- * 一般我们只需要配置 __cdn_root_path__, 会根据 __dir__ 或者 pkg.name 来生成 __public_path__,
+ * 一般我们只需要配置 __public_base_path__, 会根据 __dir__ 或者 pkg.name 来生成 __public_path__,
  * 但我们也可以强制设置 __public_path__ 来直接决定 publicPath 的配置
  * 
  * @param {object} env 
  * @return {object} env
  */
 function proccessPublicPath(env) {
-    if (!env.__public_path__ && env.__cdn_root_path__) {
-        env.__cdn_root_path__ = util.endsWithForwardSlash(env.__cdn_root_path__);
-        env.__public_path__ = env.__cdn_root_path__ + (env.__dir__ || pkg.name);
+    if (!env.__public_path__ && env.__public_base_path__) {
+        env.__public_base_path__ = util.endsWithForwardSlash(env.__public_base_path__);
+        env.__public_path__ = env.__public_base_path__ + (env.__dir__ || pkg.name);
     }
 
     if (!env.__public_path__) {

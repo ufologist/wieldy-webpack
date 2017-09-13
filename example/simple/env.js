@@ -5,13 +5,13 @@ var env = {
         __api_root_endpoint__: ''
     },
     prod: {
-        __cdn_root_path__: '//cdn.com/',
+        __public_base_path__: '//cdn.com/',
 
         __ftp_host__: 'ftp.cdn.com',
         __ftp_port__: 2121,
         __ftp_user__: 'test',
         __ftp_password__: 'test',
-        __ftp_root_path__: '/project/',
+        __ftp_base_path__: '/project/',
 
         __api_root_endpoint__: '//api.domain.com'
     }

@@ -10,10 +10,11 @@ var env = {
         __public_path__: '/'
     },
     prod: {
-        // 如果配置了 __cdn_root_path__
-        // 则会自动拼装 __public_path__ = __cdn_root_path__ + (__dir__ || pkg.name)
+        // 资源访问路径的基准路径
+        // 如果配置了 __public_base_path__
+        // 则会自动拼装 __public_path__ = __public_base_path__ + (__dir__ || pkg.name)
         // 如果同时配置 __public_path__, 则以 __public_path__ 为准
-        // __cdn_root_path__: '',
+        // __public_base_path__: '',
 
         // ftp 的相关配置, 使用 deploy 功能时需要配置
         // __ftp_host__: '',
@@ -24,10 +25,11 @@ var env = {
         // 上传到指定的 ftp 目录
         // __ftp_path__: '',
 
-        // 如果配置了 __ftp_root_path__
-        // 则会自动拼装 __ftp_path__ = __ftp_root_path__ + (__dir__ || pkg.name)
+        // FTP 的基准目录
+        // 如果配置了 __ftp_base_path__
+        // 则会自动拼装 __ftp_path__ = __ftp_base_path__ + (__dir__ || pkg.name)
         // 如果同时配置 __ftp_path__, 则以 __ftp_path__ 为准
-        // __ftp_root_path__: ''
+        // __ftp_base_path__: ''
     }
 };
 

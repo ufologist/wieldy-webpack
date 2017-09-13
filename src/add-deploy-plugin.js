@@ -23,16 +23,16 @@ function addDeployPlugin(webpackConfig, wpkConfig, env) {
 /**
  * 处理 __ftp_path__ 的配置
  * 
- * 一般我们只需要配置 __ftp_root_path__, 会根据 __dir__ 或者 pkg.name 来生成 __ftp_path__,
+ * 一般我们只需要配置 __ftp_base_path__, 会根据 __dir__ 或者 pkg.name 来生成 __ftp_path__,
  * 但我们也可以强制设置 __ftp_path__ 来直接决定上传的目录
  * 
  * @param {object} env
  * @return {object} env
  */
 function proccessFtpPath(env) {
-    if (!env.__ftp_path__ && env.__ftp_root_path__) {
-        env.__ftp_root_path__ = util.endsWithForwardSlash(env.__ftp_root_path__);
-        env.__ftp_path__ = env.__ftp_root_path__ + (env.__dir__ || pkg.name);
+    if (!env.__ftp_path__ && env.__ftp_base_path__) {
+        env.__ftp_base_path__ = util.endsWithForwardSlash(env.__ftp_base_path__);
+        env.__ftp_path__ = env.__ftp_base_path__ + (env.__dir__ || pkg.name);
     }
 
     if (env.__ftp_path__) {
