@@ -23,18 +23,6 @@ getUser().then(function(user) {
     $('.js-http-api').text(user.name);
 });
 
-// dynamic import 使用注意
-// -------
-// 如果要同时使用 dynamic import 和 babel-loader 来转译 es2015
-// import(/* webpackChunkName: "abc" */'./abc.js').then(function(mod) {
-//     mod['default']();
-// });
-// 必须给 babel-loader 配置 syntax-dynamic-import 插件来支持 import() 语法
-// 否则会提示 SyntaxError 'import' and 'export' may only appear at the top level
-// https://babeljs.io/docs/plugins/syntax-dynamic-import/
-//
-// 或者你可以不使用 dynamic import 功能, 直接使用 require.ensure 来动态加载模块,
-// 这样就不需要给 babel-loader 配置 syntax-dynamic-import 插件了
 $('.js-lazy-mod-btn').on('click', function() {
     import('./lazy.js').then(function(mod) {
         mod['default']($('.js-lazy-mod'));

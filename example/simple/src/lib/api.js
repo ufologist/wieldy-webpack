@@ -58,9 +58,9 @@ function commonStatusHandler(result) {
     console.info(result.statusInfo.message);
 
     if (result.status === ERROR_STATUS) {
-        // 
+        // XXX your code here
     } else if (result.status == 1) {
-        // 
+        // XXX your code here
     }
 }
 /**
