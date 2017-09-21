@@ -1,5 +1,5 @@
-/* 导入 npm 模块中的 css 文件 */
-@import url(~normalize.css/normalize.css);
+/* 导入 npm 模块: normalize.css, 会自动去找 main 文件 */
+@import url(~normalize.css);
 /* 使用 alias 绝对路径导入文件 */
 @import url(~@/lib/app.css);
 
