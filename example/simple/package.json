@@ -18,6 +18,8 @@
     "normalize.css": "^7.0.0"
   },
   "devDependencies": {
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.6.1",
     "wieldy-webpack": "1.x"
   }
 }
