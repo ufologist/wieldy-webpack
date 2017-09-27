@@ -1,5 +1,3 @@
-var path = require('path');
-
 // webpack 配置
 var config = {
     output: { // 构建输出的目录和文件名规则
