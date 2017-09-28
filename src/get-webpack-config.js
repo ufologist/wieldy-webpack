@@ -141,12 +141,14 @@ function getWebpackConfig(env) {
 
             // 默认只监听 localhost, 如果想通过 IP 来访问, 需要在启动时配置 host
             // 例如: --host=0.0.0.0
-            // 但这样设置后自动 open 浏览器打开的是 http://0.0.0.0:8080/ 无法访问
-            // host: '0.0.0.0',
-
+            // 但这样设置后自动 open 浏览器打开的是 http://0.0.0.0:8080/ 无法访问,
+            // 因此要配合 useLocalIp 来使用, 例如: --host=0.0.0.0 --useLocalIp
+            host: '0.0.0.0',
+            useLocalIp: true,
             // 启用 host 设置后, 报错 Invalid Host header 的解决办法
             // https://github.com/webpack/webpack-dev-server/issues/882
             disableHostCheck: true,
+
             // Shows a full-screen overlay in the browser when there are compiler errors
             // 这样浏览器中就会出现错误信息了, 不然有时候构建出错了, 你还不知道
             overlay: true,
