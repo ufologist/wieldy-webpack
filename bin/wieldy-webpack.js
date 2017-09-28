@@ -41,7 +41,6 @@ var command = npmScript['start'];
 
 // node wieldy-webpack start --env.__port__=8000
 var commandType = process.argv[2];
-
 if (npmScript[commandType]) {
     command = npmScript[commandType] + ' ' + process.argv.slice(3).join(' ');
 }
