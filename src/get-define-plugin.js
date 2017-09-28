@@ -10,7 +10,10 @@ function getDefinePlugin(env) {
     }
 
     if (env.__mode__ != 'dev') {
-        // 一般约定的优化
+        // 一般约定俗成的打包优化, 设置环境变量为 production 模式
+        // 例如 vue-loader 会判断 NODE_ENV 在非 production 模式下, 处理过的文件会带有供调试的信息,
+        // options.__file="sr/lib/hello-component/hello-component.vue"
+        process.env.NODE_ENV = 'production';
         definitions['process.env'] = {
             NODE_ENV: '"production"'
         }
