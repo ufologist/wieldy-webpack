@@ -39,6 +39,9 @@ var config = {
         // 但是对于包含 @import 方式的 css 就不能进行前缀等转换了
         ident: 'postcss',
         plugins: [
+            // 如果觉得原生 CSS 提供的语法太弱, 还是怀恋 SASS 之类的预处理器
+            // 可以使用 https://github.com/ElemeFE/postcss-salad 项目中提到的一些 postcss 插件
+            // 例如: https://github.com/jonathantneal/precss Use Sass-like markup in your CSS
             require('autoprefixer')({
                 // add: true,
                 // remove: true,
