@@ -1,8 +1,9 @@
 {
   "name": "wieldy-webpack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "易于使用的 webpack",
   "main": "src/index.js",
+  "bin": "./bin/wieldy-webpack.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

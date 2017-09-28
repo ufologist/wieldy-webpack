@@ -153,6 +153,7 @@ function getWebpackConfig(env) {
             // 这样浏览器中就会出现错误信息了, 不然有时候构建出错了, 你还不知道
             overlay: true,
 
+            // XXX The `setup` option is deprecated and will be removed in v3. Please update your config to use `before`
             setup: function(app) {
                 // Mock Server 功能通过 mock-http-api 的模块来实现
                 // 只需要在 mock/http 文件夹中放置 mock 配置即可
