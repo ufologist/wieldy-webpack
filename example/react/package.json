@@ -1,0 +1,26 @@
+{
+  "name": "wieldy-webpack-example-react",
+  "version": "0.1.0",
+  "description": "wieldy-webpack React 示例项目",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "webpack-dev-server --inline --open --progress --colors --profile --env.__mode__=dev",
+    "build": "webpack --progress --hide-modules",
+    "deploy": "webpack --progress --hide-modules --env.__deploy__",
+    "analysis": "webpack --progress --profile --json > stats.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sun",
+  "license": "MIT",
+  "dependencies": {
+    "normalize.css": "^7.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^3.3.0",
+    "webpack-dev-server": "^2.6.1",
+    "wieldy-webpack": "1.x"
+  }
+}

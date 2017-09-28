@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>wieldy-webpack React 示例项目</title>
+</head>
+<body>
+    <div class="js-app"></div>
+    <% if (htmlWebpackPlugin.options.env.__mode__ != 'dev') { %>
+    <script>
+        // How to disable React Developer Tools
+        // http://remarkablemark.org/blog/2017/01/25/disable-react-devtools/
+        // before React is loaded
+        if (typeof window.__REACT_DEVTOOLS_GLOBAL_HOOK__ === 'object') {
+            window.__REACT_DEVTOOLS_GLOBAL_HOOK__.inject = function() {};
+        }
+    </script>
+    <% } %>
+</body>
+</html>

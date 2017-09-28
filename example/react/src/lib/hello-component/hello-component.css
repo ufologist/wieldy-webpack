@@ -1,0 +1,8 @@
+.hello-component {
+    display: flex;
+    background-color: #ddd;
+}
+
+.hello-component__text {
+    display: flex;
+}
