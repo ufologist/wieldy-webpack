@@ -1,0 +1,4 @@
+/* 测试 @import 导入的样式也要经过 postcss 处理 */
+.hello-component__text {
+    display: flex;
+}
