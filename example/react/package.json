@@ -4,10 +4,10 @@
   "description": "wieldy-webpack React 示例项目",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --open --progress --colors --profile --env.__mode__=dev",
-    "build": "webpack --progress --hide-modules",
-    "deploy": "webpack --progress --hide-modules --env.__deploy__",
-    "analysis": "webpack --progress --profile --json > stats.json",
+    "start": "wieldy-webpack start",
+    "build": "wieldy-webpack build",
+    "deploy": "wieldy-webpack deploy",
+    "analysis": "wieldy-webpack analysis",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Sun",
