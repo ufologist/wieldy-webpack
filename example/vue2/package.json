@@ -4,7 +4,7 @@
   "description": "wieldy-webpack Vue2 示例项目",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "wieldy-webpack start",
+    "start": "wieldy-webpack start --hot",
     "build": "wieldy-webpack build",
     "deploy": "wieldy-webpack deploy",
     "analysis": "wieldy-webpack analysis",

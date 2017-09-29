@@ -9,9 +9,29 @@ module.exports = function(env) {
         });
         entry.addToWebpackConfig(webpackConfig);
 
-        var babelLoaderOptions = webpackConfig.module.rules.filter(function(rule) {
+        // 找出内置的 babel-loader
+        var babelLoader = webpackConfig.module.rules.filter(function(rule) {
             return rule.loader == 'babel-loader'
-        })[0].options;
+        })[0];
+
+        // 找出内置的 css 文件关联的 rule
+        var cssRule = webpackConfig.module.rules.filter(function(rule) {
+            return rule.test.test('.css');
+        })[0];
+        // 找出内置的 css-loader, 这样便于共用配置
+        var cssLoader = cssRule.use.filter(function(loader) {
+            return loader.loader == 'css-loader';
+        })[0];
+
+        // 为了样式支持 HMR, 在开发环境下只使用 style-loader
+        // XXX 目前发现 async import 即动态导入的模块 HMR 没有生效,
+        // 即开启 HMR 的时候, 修改 async-component.vue 确实会重载模块, 但界面上没有效果
+        var vueCssLoader = env.__mode__ == 'dev' ? [{
+            loader: 'vue-style-loader'
+        }, cssLoader] : ExtractTextPlugin.extract({
+            fallback: 'vue-style-loader',
+            use: [cssLoader]
+        });
 
         // 添加 vue-loader 配置
         webpackConfig.module.rules.push({
@@ -21,25 +41,17 @@ module.exports = function(env) {
                 loaders: {
                     // 需要在这里设置 babel-loader, 否则 ES2015 的语法不会转义,
                     // 除非你统一使用了 .babelrc 配置文件
-                    js: 'babel-loader?' + JSON.stringify(babelLoaderOptions),
-                    // 不能在 options.loaders.css 中配置 postcss-loader
+                    js: [babelLoader],
+                    // 由于 vue-loader 默认的 extractCSS 配置没有对样式添加 importLoaders 设置,
+                    // 这会造成 @import 进去的样式没有经过 postcss-loader 的处理,
+                    // 所以在我们需要自己来设置 css 的 loader 处理
+                    //
+                    // 但不能在 options.loaders.css 中配置 postcss-loader
                     // 否则总是报错
                     // Module build failed: TypeError: Cannot read property 'postcss' of null
                     // 应该在 options.postcss 中配置
-                    // 为了统一 webpack 的配置, 我们使用 postcss.config.js 来配置
-                    css: ExtractTextPlugin.extract({
-                        fallback: 'vue-style-loader',
-                        use: [{
-                            loader: 'css-loader',
-                            options: {
-                                // 确保通过 @import 导入的 css 也使用 postcss 来处理
-                                importLoaders: 1,
-                                // 如果不开启 sourceMap, 调试的时候定位不到样式声明的地方
-                                sourceMap: env.__mode__ == 'dev',
-                                minimize: env.__mode__ != 'dev'
-                            }
-                        }]
-                    })
+                    // 不过为了统一 webpack 的配置, 我们使用 postcss.config.js 来配置
+                    css: vueCssLoader
                 }
             }
         });
