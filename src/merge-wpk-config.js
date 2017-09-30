@@ -50,6 +50,8 @@ function adjustWpkConfig(env, wpkConfig) {
 
         wpkConfig.cssLoader.sourceMap = true;
         wpkConfig.cssLoader.minimize = false;
+
+        wpkConfig.postcssLoader.sourceMap = true;
     } else {
         if (!wpkConfig.cssLoader.minimize) {
             wpkConfig.cssLoader.minimize = true;
