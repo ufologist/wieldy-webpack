@@ -41,6 +41,10 @@ var config = {
         // 但是对于包含 @import 方式的 css 就不能进行前缀等转换了
         ident: 'postcss',
         plugins: [
+            // PS: 试过 https://github.com/ElemeFE/postcss-salad
+            //          https://github.com/jonathantneal/precss
+            //          https://github.com/MoOx/postcss-cssnext
+            // 都没有 less/sass 好用
             require('autoprefixer')({
                 // add: true,
                 // remove: true,
