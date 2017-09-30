@@ -31,6 +31,8 @@ var config = {
         // 也就是说 @import 进来的 css 文件不会被 postcss-loader 处理了
         importLoaders: 1
     },
+    // 如果觉得原生 CSS 语法太弱, 还是怀恋 LESS/SASS 之类的预处理器
+    // 可以自己添加 less-loader 或者 sass-loader 来处理 less/scss 文件
     postcssLoader: {
         // 使用了 cssLoader 的 importLoaders 配置后, 会导致报错: No PostCSS Config found
         // https://github.com/postcss/postcss-loader/issues/204
@@ -39,9 +41,6 @@ var config = {
         // 但是对于包含 @import 方式的 css 就不能进行前缀等转换了
         ident: 'postcss',
         plugins: [
-            // 如果觉得原生 CSS 提供的语法太弱, 还是怀恋 SASS 之类的预处理器
-            // 可以使用 https://github.com/ElemeFE/postcss-salad 项目中提到的一些 postcss 插件
-            // 例如: https://github.com/jonathantneal/precss Use Sass-like markup in your CSS
             require('autoprefixer')({
                 // add: true,
                 // remove: true,
