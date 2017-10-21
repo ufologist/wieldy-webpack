@@ -18,6 +18,23 @@ var addDeployPlugin = require('./add-deploy-plugin.js');
 
 var pkg = require(process.cwd() + '/package.json');
 
+function getImgLoaders(wpkConfig, env) {
+    var imgLoaders = [{
+        loader: 'url-loader',
+        options: {
+            limit: wpkConfig.urlLoader.limit,
+            name: wpkConfig.output.res + '/' + wpkConfig.output.resFilename
+        }
+    }];
+    if (env.__mode__ != 'dev') { // 非开发模式才做图片压缩
+        imgLoaders.push({
+            loader: 'image-webpack-loader',
+            options: wpkConfig.imageWebpackLoader
+        });
+    }
+    return imgLoaders;
+}
+
 function getWebpackConfig(env) {
     env = mergeEnv(env);
     var wpkConfig = mergeWpkConfig(env);
@@ -57,16 +74,7 @@ function getWebpackConfig(env) {
                 }
             }, { // 图片
                 test: /\.(jpe?g|png|gif|svg)(\?\S*)?$/i,
-                use: [{
-                    loader: 'url-loader',
-                    options: {
-                        limit: wpkConfig.urlLoader.limit,
-                        name: wpkConfig.output.res + '/' + wpkConfig.output.resFilename
-                    }
-                }, {
-                    loader: 'image-webpack-loader',
-                    options: wpkConfig.imageWebpackLoader
-                }]
+                use: getImgLoaders(wpkConfig, env)
             }, { // 字体
                 test: /\.(otf|eot|ttf|woff2?)(\?\S*)?$/i,
                 loader: 'url-loader',
@@ -111,19 +119,11 @@ function getWebpackConfig(env) {
                     return module.resource && /\.(js|json)$/.test(module.resource) && module.resource.indexOf(nodeModulesPath) === 0;
                 }
             }),
-            // 从 vendor chunk 中提取出 manifest chunk
+            // 提取出 manifest chunk
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'manifest',
-                chunks: ['vendor'],
                 minChunks: Infinity,
                 filename: wpkConfig.output.chunk + '/' + wpkConfig.output.jsFilename,
-            }),
-            // inline manifest chunk 到 HTML 中, 减少一个 JS 请求
-            new InlineChunksHtmlWebpackPlugin({
-                inlineChunks: ['manifest'],
-                // 不要将这个 chunk 删除掉, 否则当存在多个 HtmlWebpackPlugin 时,
-                // 会因为找不到这个 chunk 而报错的
-                deleteFile: false
             }),
             // 默认的 chunk id 是数字递增, 如果有添加或者删除, 就会造成 id 改变,
             // 通过命名来生成稳定的 chunk id
@@ -171,6 +171,14 @@ function getWebpackConfig(env) {
         // 默认的 module id 是数字递增, 如果发生模块的添加或者删除, 就会造成 id 改变,
         // 通过 hash 的方式生成稳定的 module id, 这样才能确保每次构建生成的文件 hash 也是稳定的
         webpackConfig.plugins.push(new webpack.HashedModuleIdsPlugin());
+        // inline manifest chunk 到 HTML 中, 减少一个 JS 请求
+        // 只在非开发模式下添加这个插件以减少构建时间
+        webpackConfig.plugins.push(new InlineChunksHtmlWebpackPlugin({
+            inlineChunks: ['manifest'],
+            // 不要将这个 chunk 删除掉, 否则当存在多个 HtmlWebpackPlugin 时,
+            // 会因为找不到这个 chunk 而报错的
+            deleteFile: false
+        }));
         webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin(wpkConfig.uglifyJsPlugin));
     }
 
