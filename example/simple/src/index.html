@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>wieldy-webpack 简单示例项目</title>
+    <% if (htmlWebpackPlugin.options.env.__mode__ == 'dev') { %>
+    <script src="//res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>window.vConsole = new VConsole();</script>
+    <% } %>
     <script>
     // 在 HTML script 中获取 env.js 中定义的环境配置
     // htmlWebpackPlugin.options.env
