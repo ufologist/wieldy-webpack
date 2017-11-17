@@ -21,3 +21,15 @@
 * 支持根据同一份源码, 生成多份不同的输出结果
   * 通过动态配置在 HTML 页面/JS 文件中注入参数来实现
 * 支持上传构建后的静态资源到 CDN(ftp)
+
+## 使用示例
+
+* [简单示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/simple)
+* [React 示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/react)
+* [Vue2 示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/vue2)
+* [多入口示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/multiple-entry)
+* [多项目示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/multiple-project)
+
+## 常见问题
+
+* [FAQ](https://github.com/ufologist/wieldy-webpack/tree/master/FAQ.md)
