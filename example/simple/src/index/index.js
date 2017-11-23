@@ -12,14 +12,27 @@ import BoxList from '../lib/box-list/box-list.js';
 // 使用 alias 绝对路径引入模块
 // PS: 会影响到转到类型定义的功能
 import {
-    getUser
+    getUser,
+    sendApiRequest
 } from '@/lib/api.js';
 
 $('.js-file-path').append('<img width="50" height="50" src="' + svg + '">');
 
 new BoxList('.box-list', 0);
 
-getUser().then(function(user) {
+getUser({
+    data: {
+        a: 1
+    }
+}).then(function(user) {
+    $('.js-http-api').text(user.name);
+});
+
+sendApiRequest('getUser', {
+    data: {
+        a: 2
+    }
+}).then(function(user) {
     $('.js-http-api').text(user.name);
 });
 
