@@ -107,20 +107,40 @@ function sendRequest(options) {
 /**
  * 统一发送(接口)请求的方法
  * 
- * @param {string} name 接口的名称, 如果不使用这个参数, 也可以发请求, 但不推荐这么使用, 应该将所有接口都配置好
+ * @param {string} name 接口的名称
+ *                      针对接口 URL 中有 path 参数的情况, 需要在 name 中加入斜杠来标识,
+ *                      如果不使用这个参数, 也可以发请求, 但不推荐这么使用, 应该将所有接口都配置好
  * @param {object} options jQuery ajax options 
  * @return {Promise}
  */
 function sendApiRequest(name, options) {
-    var apiOptions;
+    var configApiOptions;
+    var ajaxOptions;
+
     if (name) {
-        apiOptions = apiConfig[name];
-        if (!apiOptions) {
+        // 针对接口 URL 中有 path 参数的情况, 例如: //domain.com/user/123
+        // 需要在 name 中加入斜杠来标识, 例如: getUser/123
+        // 配置映射的 URL 为: //domain.com/user, 会动态的将 name 后面的 path 参数拼接到此 URL 中
+        var _name = name;
+        var urlAppend = '';
+        var slashIndex = name.indexOf('/');
+        if (slashIndex != -1) {
+            _name = name.substring(0, slashIndex);
+            urlAppend = name.substring(slashIndex);
+        }
+
+        configApiOptions = apiConfig[_name];
+        if (configApiOptions) {
+            configApiOptions = $.extend(true, {}, configApiOptions);
+            configApiOptions.url = configApiOptions.url + urlAppend;
+        } else {
             console.warn('没有找到匹配的接口配置', name, apiConfig);
         }
     }
 
-    return sendRequest($.extend(true, {}, defaultAjaxOptions, apiOptions, options));
+    ajaxOptions = $.extend(true, {}, defaultAjaxOptions, configApiOptions, options);
+
+    return sendRequest(ajaxOptions);
 }
 
 /**
