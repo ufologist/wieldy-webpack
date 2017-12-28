@@ -115,9 +115,20 @@ import './index.css';
       return rule.test.test('.css');
   })[0];
   var lessLoader = cssRule.use.slice();
-  lessLoader.push({
-      loader: 'less-loader'
-  });
+  var less = {
+      loader: 'less-loader',
+      options: {
+          sourceMap: env.__mode__ == 'dev' ? true : false,
+          // 全局覆盖 less 变量, 对定制主题非常有用
+          // this puts the declaration at the end of your base file,
+          // meaning it will override anything defined in your Less file.
+          // http://lesscss.org/usage/#using-less-in-the-browser-modifyvars
+          modifyVars: {
+              '@var': '#aaa'
+          }
+      }
+  };
+  lessLoader.push(less);
 
   // 添加 less-loader 配置
   webpackConfig.module.rules.push({
@@ -147,6 +158,21 @@ var cssRule = webpackConfig.module.rules.filter(function(rule) {
 var cssLoader = cssRule.use.filter(function(loader) {
     return loader.loader == 'css-loader';
 })[0];
+var lessLoader = cssRule.use.slice();
+var less = {
+    loader: 'less-loader',
+    options: {
+        sourceMap: env.__mode__ == 'dev' ? true : false,
+        // 全局覆盖 less 变量, 对定制主题非常有用
+        // this puts the declaration at the end of your base file,
+        // meaning it will override anything defined in your Less file.
+        // http://lesscss.org/usage/#using-less-in-the-browser-modifyvars
+        modifyVars: {
+            '@var': '#aaa'
+        }
+    }
+};
+lessLoader.push(less);
 
 // 为了样式支持 HMR, 在开发环境下只使用 style-loader
 // XXX 目前发现 async import 即动态导入的模块 HMR 没有生效,
@@ -158,9 +184,7 @@ var vueCssLoader = env.__mode__ == 'dev' ? [{
     use: [cssLoader]
 });
 var vueLessLoader = vueCssLoader.slice();
-vueLessLoader.push({
-    loader: 'less-loader'
-});
+vueLessLoader.push(less);
 
 // vue-loader 配置
 options: {
