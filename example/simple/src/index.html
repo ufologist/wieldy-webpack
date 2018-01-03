@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>wieldy-webpack 简单示例项目</title>
-    <% if (htmlWebpackPlugin.options.env.__mode__ == 'dev') { %>
-    <script src="//wechatfe.github.io/vconsole/lib/vconsole.min.js?v=3.0.0.0"></script>
-    <script>window.vConsole = new VConsole();</script>
-    <% } %>
+    <%= htmlWebpackPlugin.options.env.__common_head__ %>
     <script>
     // 在 HTML script 中获取 env.js 中定义的环境配置
     // htmlWebpackPlugin.options.env
@@ -55,5 +52,6 @@
     <div class="js-lazy-mod">
         <button class="js-lazy-mod-btn">点击加载模块</button>
     </div>
+    <%= htmlWebpackPlugin.options.env.__common_body__ %>
 </body>
 </html>
