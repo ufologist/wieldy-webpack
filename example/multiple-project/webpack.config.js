@@ -8,7 +8,7 @@ var wieldyWebpack = require('wieldy-webpack');
  */
 function addEntries(env, webpackConfig) {
     // 指定入口的 js 文件和 html 文件的路径, 默认相对于 src 目录(根目录)
-    var entry = wieldyWebpack.createEntry('index.js', 'index.html', {
+    wieldyWebpack.createEntry('index.js', 'index.html', {
         env: env,
 
         // 如果有多个入口, 则在创建时需要设置 setChunks 为 true
@@ -16,8 +16,7 @@ function addEntries(env, webpackConfig) {
 
         // 多项目时需要修改 src 目录的根目录
         srcBase: 'src/' + env.__dir__,
-    });
-    entry.addToWebpackConfig(webpackConfig);
+    }).addToWebpackConfig(webpackConfig);
 }
 
 module.exports = function(env) {
