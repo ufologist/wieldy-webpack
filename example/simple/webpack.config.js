@@ -26,17 +26,17 @@ function addEntries(env, webpackConfig) {
  */
 function beautifyJsForDebug(env, webpackConfig) {
     var webpack = require('webpack');
-    var uglifyJsPlugin = webpackConfig.plugins.filter(function(plugin) {
-        return plugin instanceof webpack.optimize.UglifyJsPlugin
-    })[0];
-    if (uglifyJsPlugin) {
-        uglifyJsPlugin.options = {
-            beautify: true,
-            comments: true,
-            mangle: false,
-            compress: false
+    var index = -1;
+    for (var i = 0, length = webpackConfig.plugins.length; i < length; i++) {
+        if (webpackConfig.plugins[i] instanceof webpack.optimize.UglifyJsPlugin) {
+            index = i;
+            break;
         }
     }
+    if (index != -1) {
+        webpackConfig.plugins.splice(index, 1);
+    }
+    process.env.NODE_ENV = 'development';
 }
 
 /**
