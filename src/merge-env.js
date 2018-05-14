@@ -15,7 +15,7 @@ var pkg = require(process.cwd() + '/package.json');
  * @return {object} 合并后的环境配置
  */
 function mergeEnv(env) {
-    if (!env.__mode__) { // 默认为生成环境
+    if (!env.__mode__) { // 默认为正式(生产)环境
         env.__mode__ = 'prod';
     }
 
@@ -57,7 +57,7 @@ function mergeEnv(env) {
 /**
  * 处理 __public_path__ 的配置
  * 
- * 一般我们只需要配置 __public_base_path__, 会根据 __dir__ 或者 pkg.name 来生成 __public_path__,
+ * 一般我们只需要配置 __public_base_path__, 会再拼接 __dir__ 或者 pkg.name 来生成 __public_path__,
  * 但我们也可以强制设置 __public_path__ 来直接决定 publicPath 的配置
  * 
  * @param {object} env 
@@ -70,7 +70,7 @@ function proccessPublicPath(env) {
     }
 
     if (!env.__public_path__) {
-        env.__public_path__ = '';
+        env.__public_path__ = '/';
     } else {
         env.__public_path__ = util.endsWithForwardSlash(env.__public_path__);
     }

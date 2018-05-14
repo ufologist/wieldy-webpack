@@ -30,7 +30,7 @@ var env = {
 
         __page_data__: '!{pageData}'
     },
-    prod: { // 正式环境
+    prod: { // 生产环境(正式环境)
         __api_root_endpoint__: '', // 正式环境可能指向网关, 例如: //api.domain.com
         __common_head__: metaViewport,
         __common_body__: '',

@@ -15,9 +15,7 @@ function getDefinePlugin(env) {
         // options.__file="sr/lib/hello-component/hello-component.vue"
         // 再例如 react 的 https://facebook.github.io/react/docs/optimizing-performance.html#webpack
         process.env.NODE_ENV = 'production';
-        definitions['process.env'] = {
-            NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-        }
+        definitions['process.env.NODE_ENV'] = JSON.stringify(process.env.NODE_ENV);
     }
 
     return new webpack.DefinePlugin(definitions);

@@ -5,10 +5,10 @@
     <title>wieldy-webpack 简单示例项目</title>
     <%= htmlWebpackPlugin.options.env.__common_head__ %>
     <script>
-    // 在 HTML script 中获取 env.js 中定义的环境配置
+    // 在 HTML <script> 中获取 env.js 中定义的环境变量
     // htmlWebpackPlugin.options.env
     //
-    // 注意这里的内容相当于替换
+    // 环境变量的内容是作为字符串直接输出的
     // - 如果是 string 类型的值需要用引号引起来
     //   例如: var a = '<%= htmlWebpackPlugin.options.env.__public_path__ %>';
     //   否则得到的是 var a = //a.com/publicpath/;

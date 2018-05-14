@@ -3,8 +3,8 @@ var wieldyWebpack = require('wieldy-webpack');
 /**
  * 添加对 React 支持的配置
  * 
- * @param {*} env 
- * @param {*} webpackConfig 
+ * @param {object} env 
+ * @param {object} webpackConfig 
  */
 function addReactSupport(env, webpackConfig) {
     var babelLoaderOptions = webpackConfig.module.rules.filter(function(rule) {

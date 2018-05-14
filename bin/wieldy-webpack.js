@@ -50,5 +50,5 @@ if (npmScript[commandType]) {
 console.log('> ' + command + '\n');
 
 execSync(command, {
-    stdio:[process.stdin, process.stdout, process.stderr]
+    stdio: [process.stdin, process.stdout, process.stderr]
 });

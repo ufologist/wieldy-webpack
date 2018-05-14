@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.0.6 2018-5-14
+
+  解决开发阶段增量构建时老是出现卡死的情况
+
 * v1.0.5 2018-3-8
 
   在 Mac 下发现 `wieldy-webpack` 跑不起来, 搜索得知 `bin/wieldy-webpack.js` 有行结束符兼容性问题, 需要由 `CRLF` 修改为 `LF`

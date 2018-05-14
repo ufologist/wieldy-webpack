@@ -107,7 +107,7 @@ function getWebpackConfig(env) {
                 allChunks: false
             }),
             new webpack.BannerPlugin(`${env.__dir__ || pkg.name} | (c) ${pkg.author}`),
-            // 将所有 npm 的包(JS/JSON 文件)都打包成一个第三方依赖包
+            // 分离所有 npm 的包(JS/JSON 文件), 打包成一个第三方依赖包
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'vendor',
                 filename: wpkConfig.output.chunk + '/' + wpkConfig.output.jsFilename,
@@ -119,16 +119,12 @@ function getWebpackConfig(env) {
                     return module.resource && /\.(js|json)$/.test(module.resource) && module.resource.indexOf(nodeModulesPath) === 0;
                 }
             }),
-            // 提取出 manifest chunk
+            // 分离出 manifest chunk
             new webpack.optimize.CommonsChunkPlugin({
                 name: 'manifest',
                 minChunks: Infinity,
                 filename: wpkConfig.output.chunk + '/' + wpkConfig.output.jsFilename,
-            }),
-            // 默认的 chunk id 是数字递增, 如果有添加或者删除, 就会造成 id 改变,
-            // 通过命名来生成稳定的 chunk id
-            // webpack 的概念: 将一个个 module(模块) 打包成 chunk(分块) 文件
-            new webpack.NamedChunksPlugin(chunkNameResolver)
+            })
         ],
         devtool: wpkConfig.devtool,
         devServer: {
@@ -163,9 +159,17 @@ function getWebpackConfig(env) {
     };
 
     if (env.__mode__ == 'dev') { // 开发模式
+        // 默认的 chunk id 是数字递增, 如果有添加或者删除, 就会造成 id 改变,
+        // 通过命名来生成稳定的 chunk id
+        // webpack 的概念: 将一个个 module(模块) 打包成 chunk(分块) 文件
+        //
+        // 注意: 开发时不要使用 chunkNameResolver, 因为使用后发现增量构建时有很高的机率造成构建过程卡死停滞,
+        // 即 hang 住, 重现方法为: 直接快速的保存一个文件, 一般 5 分钟左右就会让构建卡死停滞
+        webpackConfig.plugins.push(new webpack.NamedChunksPlugin());
         // 开发模式下使用 NamedModulesPlugin 标识出每个模块对应的文件, 便于调试
         webpackConfig.plugins.push(new webpack.NamedModulesPlugin());
     } else { // 非开发模式
+        webpackConfig.plugins.push(new webpack.NamedChunksPlugin(chunkNameResolver));
         // 开启 NoEmitOnErrorsPlugin 会在构建出错后就不继续构建任务了
         webpackConfig.plugins.push(new webpack.NoEmitOnErrorsPlugin());
         // 默认的 module id 是数字递增, 如果发生模块的添加或者删除, 就会造成 id 改变,

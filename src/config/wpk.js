@@ -2,11 +2,11 @@
 var config = {
     output: { // 构建输出的目录和文件名规则
         path: 'dist',   // 构建输出的目录, 对应 webpack 配置的 output.path
-        chunk: 'chunk', // 模块目录(基于 output.path)
-        res: 'res',     // 资源文件目录(基于 output.path)
+        chunk: 'chunk', // 拆分出来的模块放置的目录(基于 output.path)
+        res: 'res',     // 资源文件的目录(基于 output.path)
         jsFilename: '[name]-[chunkhash:7].js',
         cssFilename: '[name]-[contenthash:7].css',
-        resFilename: '[name]-[hash:7].[ext]'
+        resFilename: '[name]-[hash:7].[ext]' // 资源文件文件名的格式
     },
 
     devtool: 'source-map',
@@ -58,6 +58,8 @@ var config = {
     },
     imageWebpackLoader: {
         optipng: {
+            // optipng 压缩很慢, 而且压缩的效果不好, 只使用 pngquant 就好了
+            enabled: false,
             optimizationLevel: 7
         },
         gifsicle: {
@@ -68,8 +70,10 @@ var config = {
             speed: 4
         },
         mozjpeg: {
+            progressive: true,
             quality: 75
-        }
+        },
+        svgo: {}
     },
     uglifyJsPlugin: {
         compress: {
