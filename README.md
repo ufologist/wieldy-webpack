@@ -9,6 +9,8 @@
 [changelog-image]: https://img.shields.io/badge/CHANGE-LOG-blue.svg?style=flat-square
 [changelog-url]: https://github.com/ufologist/wieldy-webpack/blob/master/CHANGELOG.md
 
+![使用对比](https://github.com/ufologist/wieldy-webpack/blob/master/compare.png?raw=true)
+
 易于使用的 `webpack`
 
 > **将通用的 `webpack` 配置做为一个模块封装起来**
@@ -43,7 +45,7 @@
 * 仅封装配置, 完整的返回 `webpack` 的配置, 可以理解为返回了一份默认的 `webpack` 配置信息
 * 可以对返回的 `webpack` 配置再做扩展以适用不同的项目, 例如支持 `vue`/`react`
 
-## 内置功能
+## [内置功能](https://github.com/ufologist/wieldy-webpack/blob/master/manual.md)
 
 * 优选的默认配置
 * 多环境构建
@@ -57,7 +59,27 @@
 
 ## 使用方法
 
+### 安装
 
+```
+npm install webpack@3.x webpack-dev-server@2.x wieldy-webpack@1.x --save-dev
+```
+
+### 新建并配置 `webpack.config.js`
+
+```javascript
+var wieldyWebpack = require('wieldy-webpack');
+
+module.exports = function(env) {
+    return wieldyWebpack.createWebpackConfig(env = env ? env : {}).then(function(webpackConfig) {
+        wieldyWebpack.createEntry('index/index.js', 'index.html', {
+            env: env
+        }).addToWebpackConfig(webpackConfig);
+
+        return webpackConfig;
+    });
+};
+```
 
 ## 使用示例
 
@@ -66,6 +88,11 @@
 * [Vue2 示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/vue2)
 * [多入口示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/multiple-entry)
 * [多项目示例项目](https://github.com/ufologist/wieldy-webpack/tree/master/example/multiple-project)
+
+## API
+
+* `wieldyWebpack.createWebpackConfig` 创建 webpack 配置
+* `wieldyWebpack.createEntry` 创建 entry(包括 HTML 入口)
 
 ## 常见问题
 
