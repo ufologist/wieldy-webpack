@@ -15,9 +15,10 @@ function addEntries(env, webpackConfig) {
     }).addToWebpackConfig(webpackConfig);
 
     wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
+        title: 'wieldy-webpack 多入口示例项目 about',
         env: env,
         setChunks: true
-    }).addToWebpackConfig(webpackConfig);
+    }).useLayout('layout.html').addToWebpackConfig(webpackConfig);
 }
 
 module.exports = function(env) {

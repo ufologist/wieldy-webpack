@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <% if (htmlWebpackPlugin.options.env.__mode__ !== 'prod') { %>
+    <script src="//unpkg.com/vconsole@3.3.0/dist/vconsole.min.js"></script>
+    <script>window.vConsole = new VConsole();</script>
+    <% } %>
+    <% if (htmlWebpackPlugin.options.env.__head_start__) { %><%= htmlWebpackPlugin.options.env.__head_start__ %><% } %>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>window.GLOBAL_DATA={};window.PAGE_DATA={};</script>
+    <% if (htmlWebpackPlugin.options.env.__page_data__) { %>
+    <script>PAGE_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__page_data__) : htmlWebpackPlugin.options.env.__page_data__ %>;</script>
+    <% } %>
+    <% if (htmlWebpackPlugin.options.env.__head_end__) { %><%= htmlWebpackPlugin.options.env.__head_end__ %><% } %>
+</head>
+<body>
+<% if (htmlWebpackPlugin.options.env.__body_start__) { %><%= htmlWebpackPlugin.options.env.__body_start__ %><% } %>
+<!-- body -->
+<% if (htmlWebpackPlugin.options.env.__body_end__) { %><%= htmlWebpackPlugin.options.env.__body_end__ %><% } %>
+</body>
+</html>
