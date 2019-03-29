@@ -58,27 +58,22 @@ function Entry(entry, htmlPlugin) {
  * 
  * @param {string} layoutFile
  * @param {object} options
+ * @param {string} [options.isContent=false] 将 `layoutFile` 参数视作 layout 文件的内容
  * @param {string} [options.srcBase='src'] src 的根目录
  * @param {string} [options.placeholder='<!-- body -->'] 要替换的占位文字
  * @return {Entry} this
  */
 Entry.prototype.useLayout = function(layoutFile, options) {
     options = Object.assign({
+        isContent: false,
         srcBase: 'src',
         placeholder: '<!-- body -->'
     }, options);
 
-    var layoutFilePath = '';
-    if (path.isAbsolute(layoutFile)) {
-        layoutFilePath = layoutFile;
-    } else {
-        layoutFilePath = path.resolve(options.srcBase, layoutFile);
-    }
-
     this.htmlPlugin.options.__layout__ = {
         options: options,
-        layoutFilePath: layoutFilePath,
-        templateFilePath: this.htmlPlugin.options.template
+        layoutFile: layoutFile,
+        templateFile: this.htmlPlugin.options.template
     };
     this.htmlPlugin.options.template = __dirname + '/use-layout-template.js';
 
