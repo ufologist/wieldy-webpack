@@ -55,7 +55,7 @@ function Entry(entry, htmlPlugin) {
  * 2. 不能在页面中使用 loader
  * 3. 页面修改了之后不能及时生效, 只能停掉构建后重新构建
  * 
- * @param {string} layoutTemplate
+ * @param {string} layoutFile
  * @param {object} options
  * @param {string} [options.srcBase='src'] src 的根目录
  * @param {string} [options.placeholder='<!-- body -->'] 要替换的占位文字
