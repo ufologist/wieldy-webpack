@@ -1,7 +1,5 @@
 var path = require('path').posix;
-var fs = require('fs');
 
-var _ = require('lodash');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
@@ -52,11 +50,10 @@ function Entry(entry, htmlPlugin) {
  * ```
  * 
  * 注意: 
- * 1. 使用的是 HtmlWebpackPlugin.options.templateContent 机制
- *    虽然官方已经说去除这个选项了, 但实际上还是可用
+ * 1. 使用的是 HtmlWebpackPlugin.options.template js 机制
  *    https://github.com/jantimon/html-webpack-plugin/blob/master/migration.md#isomorph-apps
- * 
- * 2. 使用 layout 机制不能在模版中使用 loader
+ * 2. 不能在页面中使用 loader
+ * 3. 页面修改了之后不能及时生效, 只能停掉构建后重新构建
  * 
  * @param {string} layoutTemplate
  * @param {object} options
@@ -70,17 +67,16 @@ Entry.prototype.useLayout = function(layoutFile, options) {
         placeholder: '<!-- body -->'
     }, options);
 
-    var layoutFilePath = path.resolve(options.srcBase, layoutFile);
-    var layoutContent = fs.readFileSync(layoutFilePath, 'utf8');
+    this.htmlPlugin.options.__layout__ = {
+        options: options,
+        layoutFilePath: path.resolve(options.srcBase, layoutFile),
+        templateFilePath: this.htmlPlugin.options.template
+    };
+    this.htmlPlugin.options.template = __dirname + '/use-layout-template.js';
 
-    var templateContent = fs.readFileSync(this.htmlPlugin.options.template, 'utf8');
-    // 替换 layout 模版中的占位内容
-    templateContent = layoutContent.replace(options.placeholder, templateContent);
-
-    // 根据数据生成 HTML 页面的内容
-    this.htmlPlugin.options.templateContent = _.template(templateContent)({
-        htmlWebpackPlugin: this.htmlPlugin
-    });
+    // TODO
+    // 如果要实现原来的模版页面更新之后就自动重新构建
+    // 需要监听模版文件修改了之后, 触发 use-layout-template.js 修改(例如调整文件的时间)
 
     return this;
 };
