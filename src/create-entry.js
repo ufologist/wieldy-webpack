@@ -1,5 +1,7 @@
 var path = require('path').posix;
+var fs = require('fs');
 
+var _ = require('lodash');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /**
@@ -12,6 +14,81 @@ function Entry(entry, htmlPlugin) {
     this.entry = entry;
     this.htmlPlugin = htmlPlugin;
 }
+/**
+ * 使用 layout 模版改写 HtmlWebpackPlugin 的 HTML 内容
+ * 
+ * 这样就能够使用一个全局的页面模版, 在全局页面模版中统一添加一些内容, 接入的页面只需要关心 body 这里的内容即可
+ * 
+ * 例如: layout.html
+ * ```html
+ * <!DOCTYPE html>
+ * <html lang="en">
+ * <head>
+ *     <meta charset="UTF-8">
+ *     <% if (htmlWebpackPlugin.options.env.__mode__ !== 'prod') { %>
+ *     <script src="//unpkg.com/vconsole@3.3.0/dist/vconsole.min.js"></script>
+ *     <script>window.vConsole = new VConsole();</script>
+ *     <% } %>
+ *     <% if (htmlWebpackPlugin.options.env.__head_start__) { %><%= htmlWebpackPlugin.options.env.__head_start__ %><% } %>
+ *     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+ *     <title><%= htmlWebpackPlugin.options.title %></title>
+ *     <script>window.GLOBAL_DATA={};window.PAGE_DATA={};</script>
+ *     <% if (htmlWebpackPlugin.options.env.__page_data__) { %>
+ *     <script>PAGE_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__page_data__) : htmlWebpackPlugin.options.env.__page_data__ %>;</script>
+ *     <% } %>
+ *     <% if (htmlWebpackPlugin.options.env.__head_end__) { %><%= htmlWebpackPlugin.options.env.__head_end__ %><% } %>
+ * </head>
+ * <body>
+ * <% if (htmlWebpackPlugin.options.env.__body_start__) { %><%= htmlWebpackPlugin.options.env.__body_start__ %><% } %>
+ * <!-- body -->
+ * <% if (htmlWebpackPlugin.options.env.__body_end__) { %><%= htmlWebpackPlugin.options.env.__body_end__ %><% } %>
+ * </body>
+ * </html>
+ * ```
+ * 
+ * index.html 只需要关注中间的内容即可
+ * ```html
+ * <div>index 页面</div>
+ * ```
+ * 
+ * 注意: 
+ * 1. 使用的是 HtmlWebpackPlugin.options.templateContent 机制
+ *    虽然官方已经说去除这个选项了, 但实际上还是可用
+ *    https://github.com/jantimon/html-webpack-plugin/blob/master/migration.md#isomorph-apps
+ * 
+ * 2. 使用 layout 机制不能在模版中使用 loader
+ * 
+ * @param {string} layoutTemplate
+ * @param {object} options
+ * @param {string} [options.srcBase='src'] src 的根目录
+ * @param {string} [options.placeholder='<!-- body -->'] 要替换的占位文字
+ * @return {Entry} this
+ */
+Entry.prototype.useLayout = function(layoutFile, options) {
+    options = Object.assign({
+        srcBase: 'src',
+        placeholder: '<!-- body -->'
+    }, options);
+
+    var layoutFilePath = path.resolve(options.srcBase, layoutFile);
+    var layoutContent = fs.readFileSync(layoutFilePath, 'utf8');
+
+    var templateContent = fs.readFileSync(this.htmlPlugin.options.template, 'utf8');
+    // 替换 layout 模版中的占位内容
+    templateContent = layoutContent.replace(options.placeholder, templateContent);
+
+    // 根据数据生成 HTML 页面的内容
+    this.htmlPlugin.options.templateContent = _.template(templateContent)({
+        htmlWebpackPlugin: this.htmlPlugin
+    });
+
+    return this;
+};
+/**
+ * 将入口配置合并到 webpackConfig 中
+ * - entry
+ * - htmlPlugin
+ */
 Entry.prototype.addToWebpackConfig = function(webpackConfig) {
     Object.assign(webpackConfig.entry, this.entry);
     webpackConfig.plugins.push(this.htmlPlugin);
@@ -25,8 +102,9 @@ Entry.prototype.addToWebpackConfig = function(webpackConfig) {
  *                 例如: index/index.js -> entryName 为: index/index
  * @param {string} entryHtmlFile 入口 HTML 文件
  * @param {object} options
- * @param {string} options.srcBase src 的根目录, 默认为 src 目录
- * @param {object} options.env 环境配置
+ * @param {string} [options.title='title'] 页面的标题
+ * @param {string} [options.srcBase='src'] src 的根目录
+ * @param {object} options.env 环境配置, 用于在生成 HTML 页面时做环境的判断
  * @param {boolean} options.setChunks 是否设置 HtmlWebpackPlugin 需要包含的 chunks,
  *                                    当涉及到多个入口的时候, 才需要设置 setChunks 为 true,
  *                                    会将 chunks 配置为:
@@ -36,7 +114,8 @@ Entry.prototype.addToWebpackConfig = function(webpackConfig) {
  */
 function createEntry(entryJsFile, entryHtmlFile, options) {
     options = Object.assign({
-        srcBase: 'src'
+        srcBase: 'src',
+        title: 'title'
     }, options);
 
     var srcBasePath = path.resolve(options.srcBase);
@@ -54,6 +133,7 @@ function createEntry(entryJsFile, entryHtmlFile, options) {
 
     var htmlOutputPath = path.relative(srcBasePath, entryHtmlPath);
     var htmlPluginOptions = {
+        title: options.title,
         filename: htmlOutputPath,
         template: entryHtmlPath,
         chunksSortMode: 'dependency',
