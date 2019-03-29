@@ -184,3 +184,76 @@ dev: {
       <%= htmlWebpackPlugin.options.env.__common_body__ %>
   </body>
   ```
+
+## 入口页面的 layout 机制
+
+### 什么叫做 layout 机制?
+
+以一个内容为模版, 其他页面替换掉模版中占位的内容, 合成一个完整的页面
+
+例如 layout 的内容如下
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <% if (htmlWebpackPlugin.options.env.__mode__ !== 'prod') { %>
+    <script src="//unpkg.com/vconsole@3.3.0/dist/vconsole.min.js"></script>
+    <script>window.vConsole = new VConsole();</script>
+    <% } %>
+    <% if (htmlWebpackPlugin.options.env.__head_start__) { %><%= htmlWebpackPlugin.options.env.__head_start__ %><% } %>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <script>window.GLOBAL_DATA={};window.PAGE_DATA={};</script>
+    <% if (htmlWebpackPlugin.options.env.__page_data__) { %>
+    <script>PAGE_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__page_data__) : htmlWebpackPlugin.options.env.__page_data__ %>;</script>
+    <% } %>
+    <% if (htmlWebpackPlugin.options.env.__head_end__) { %><%= htmlWebpackPlugin.options.env.__head_end__ %><% } %>
+</head>
+<body>
+<% if (htmlWebpackPlugin.options.env.__body_start__) { %><%= htmlWebpackPlugin.options.env.__body_start__ %><% } %>
+<!-- body -->
+<% if (htmlWebpackPlugin.options.env.__body_end__) { %><%= htmlWebpackPlugin.options.env.__body_end__ %><% } %>
+</body>
+</html>
+```
+
+`index.html` 只需要关注自己的内容, 会以它内容替换掉 `<!-- body -->`(可以通过 `options.placeholder` 来配置)
+```html
+<div>index 页面</div>
+```
+
+### 使用方法
+
+`createEntry().useLayout(file, options)`
+
+* 默认读取 `src` 目录下面的 layout 文件, 可以通过 `options.srcBase` 来指定目录
+
+  ```javascript
+  wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
+      title: 'wieldy-webpack 多入口示例项目 about',
+      env: env,
+      setChunks: true
+  }).useLayout('layout.html').addToWebpackConfig(webpackConfig);
+  ```
+* layout 文件可以指向绝对路径的文件, 此时会忽略 `options.srcBase` 选项
+
+  ```javascript
+  wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
+      title: 'wieldy-webpack 多入口示例项目 about',
+      env: env,
+      setChunks: true
+  }).useLayout(path.resolve('node_modules/foobar/layout.html')).addToWebpackConfig(webpackConfig);
+  ```
+* 可以直接指定 layout 文件的内容
+
+  ```javascript
+  wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
+      title: 'wieldy-webpack 多入口示例项目 about',
+      env: env,
+      setChunks: true
+  }).useLayout('layout 文件的内容', {
+      isContent: true
+  }).addToWebpackConfig(webpackConfig);
+  ```
