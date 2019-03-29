@@ -1,4 +1,4 @@
-var path = require('path').posix;
+var path = require('path');
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -52,6 +52,7 @@ function Entry(entry, htmlPlugin) {
  * 注意: 
  * 1. 使用的是 HtmlWebpackPlugin.options.template js 机制
  *    https://github.com/jantimon/html-webpack-plugin/blob/master/migration.md#isomorph-apps
+ *    PS: HtmlWebpackPlugin.options.templateContent 虽然文档中说去掉了, 但实际上还可以使用
  * 2. 不能在页面中使用 loader
  * 3. 页面修改了之后不能及时生效, 只能停掉构建后重新构建
  * 
@@ -121,20 +122,20 @@ function createEntry(entryJsFile, entryHtmlFile, options) {
         title: 'title'
     }, options);
 
-    var srcBasePath = path.resolve(options.srcBase);
-    var entryJsPath = path.resolve(options.srcBase, entryJsFile);
-    var entryHtmlPath = path.resolve(options.srcBase, entryHtmlFile);
+    var srcBasePath = path.posix.resolve(options.srcBase);
+    var entryJsPath = path.posix.resolve(options.srcBase, entryJsFile);
+    var entryHtmlPath = path.posix.resolve(options.srcBase, entryHtmlFile);
 
     var entry = {};
     // 获取相对于 src 根目录的路径名
     // 例如: src/index.js       -> index.js
     //       src/about/about.js -> about/about.js
-    var entryName = path.relative(srcBasePath, entryJsPath);
+    var entryName = path.posix.relative(srcBasePath, entryJsPath);
     // 去掉文件后缀名
     entryName = entryName.substring(0, entryName.lastIndexOf('.'));
     entry[entryName] = entryJsPath;
 
-    var htmlOutputPath = path.relative(srcBasePath, entryHtmlPath);
+    var htmlOutputPath = path.posix.relative(srcBasePath, entryHtmlPath);
     var htmlPluginOptions = {
         title: options.title,
         filename: htmlOutputPath,

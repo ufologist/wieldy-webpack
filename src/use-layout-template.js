@@ -11,6 +11,10 @@ var _ = require('lodash');
  * @param {string} templateParams.htmlWebpackPlugin.options.__layout__.templateFilePath
  */
 module.exports = function(templateParams) {
+    console.log('------使用 layout 机制------');
+    console.log(JSON.stringify(templateParams.htmlWebpackPlugin.options.__layout__, null, 4));
+    console.log('---------------------------');
+
     var layoutContent = fs.readFileSync(templateParams.htmlWebpackPlugin.options.__layout__.layoutFilePath, 'utf8');
     var templateContent = fs.readFileSync(templateParams.htmlWebpackPlugin.options.__layout__.templateFilePath, 'utf8');
 
