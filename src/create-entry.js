@@ -67,9 +67,16 @@ Entry.prototype.useLayout = function(layoutFile, options) {
         placeholder: '<!-- body -->'
     }, options);
 
+    var layoutFilePath = '';
+    if (path.isAbsolute(layoutFile)) {
+        layoutFilePath = layoutFile;
+    } else {
+        layoutFilePath = path.resolve(options.srcBase, layoutFile);
+    }
+
     this.htmlPlugin.options.__layout__ = {
         options: options,
-        layoutFilePath: path.resolve(options.srcBase, layoutFile),
+        layoutFilePath: layoutFilePath,
         templateFilePath: this.htmlPlugin.options.template
     };
     this.htmlPlugin.options.template = __dirname + '/use-layout-template.js';
