@@ -19,6 +19,10 @@ module.exports = function(templateParams) {
     console.log('---------------------------');
 
     var layoutContent = '';
+    var templateContent = '';
+    var html = '';
+
+    // 获取 layout 的内容
     if (layout.options.isContent) {
         layoutContent = layout.layoutFile;
     } else {
@@ -29,15 +33,26 @@ module.exports = function(templateParams) {
             layoutFilePath = path.resolve(layout.options.srcBase, layout.layoutFile);
         }
 
-        layoutContent = fs.readFileSync(layoutFilePath, 'utf8');
+        try {
+            layoutContent = fs.readFileSync(layoutFilePath, 'utf8');
+        } catch (error) {
+            console.error('read layout content fail', error.message);
+            throw error;
+        }
     }
 
-    var templateContent = fs.readFileSync(layout.templateFile, 'utf8');
-    // 替换 layout 模版中的占位内容
-    templateContent = layoutContent.replace(layout.options.placeholder, templateContent);
+    // 获取页面模版的内容
+    try {
+        templateContent = fs.readFileSync(layout.templateFile, 'utf8');
+    } catch (error) {
+        console.error('read template content fail', error.message);
+        throw error;
+    }
 
+    // 以页面模版的内容替换掉 layout 内容中占位的内容
+    html = layoutContent.replace(layout.options.placeholder, templateContent);
     // 根据数据生成 HTML 页面的内容
-    return _.template(templateContent)({
+    return _.template(html)({
         htmlWebpackPlugin: templateParams.htmlWebpackPlugin
     });
 };
