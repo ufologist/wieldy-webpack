@@ -57,6 +57,32 @@
 import svg from 'ionicons/dist/svg/ios-sunny-outline.svg';
 ```
 
+## 如何在 JS 中根据环境动态的引入静态资源
+
+例如需要在不同的环境下使用不同的图片
+
+* 在 `env.js` 中配置好环境变量
+
+  ```javascript
+  {
+      dev: {
+          __qrcode__: './res/dev.jpg'
+      },
+      prod: {
+          __qrcode__: './res/prod.jpg'
+      }
+  }
+  ```
+* 通过 `require` 的方式使用环境变量引入图片
+
+  `var qrcode = require(__qrcode__);`
+
+  注意不能使用 `import` 的方式来引入图片, 因为 `import` 只接受静态的方式来引用资源
+
+注意引入图片或者其他静态资源, 必须将其当作一个依赖来引入, 而非直接以一个字符串路径的方式来引入. 因为最终这个引用会构建生成, 例如生成一个带 hash 的路径, 或者打包成 base64
+
+例如: `var img = '/res/a.png';`, 应该修改为: `import img from './res/a.png';`
+
 ## 如何将第三方的 CSS 抽离出来作为一个独立的 CSS 文件: vendor.css?
 
 一般 CSS 文件的依赖我们会放在 CSS 中来管理, 例如我们会在 CSS 文件中导入第三方的 CSS 文件
@@ -295,3 +321,35 @@ import(/* webpackChunkName: "abc" */'./abc.js').then(function(mod) {
 > SyntaxError 'import' and 'export' may only appear at the top level
 
 或者你可以不使用 dynamic import 功能, 使用以往的 `require.ensure` 来动态加载模块, 这样就不需要给 `babel-loader` 配置 `syntax-dynamic-import` 插件了
+
+## 前后端分离的项目, 如何将所有接口都切换到真实接口
+
+### 需求
+
+在联调阶段, 由于后端接口都已经开发完成, 此时前端构建好的代码也会合并到后端项目, 一起部署到测试服务器上.
+这时候往往会暴露出许多问题, 因为 mock 数据接口相对于真实实现的接口, 输出的数据会比较理想.
+此时如果发现问题, 调试起来就比较麻烦, 会需要重复以下步骤, 效率很低, 而且影响到测试环境的稳定性
+* 前端构建
+* 提交到后端
+* 重新部署到测试服务器看效果
+
+因此前端需要能够将 mock 数据接口切换成测试服务器上的接口, 这样就好定位和调试问题, 不用反复和后端沟通和部署测试环境.
+
+### 解决方式
+
+1. 启动时修改环境变量 `__api_root_endpoint__` 的值, 指向 `//api.domain.com`
+
+   > `npm start -- --env.__api_root_endpoint__=//api.domain.com`
+   >
+   > 可以将其封装成一个 `npm scripts` 便于以后执行
+   >
+   > `"start-test": "npm start -- --env.__api_root_endpoint__=//api.domain.com"`
+2. 修改浏览器的安全设置, 允许跨域访问
+
+   > `"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --disable-web-security --user-data-dir`
+3. 先正常登录后端系统
+
+   > 访问 `http://api.domain.com/login`
+4. 登录成功后, 正常访问页面即可
+
+   > 访问 `http://localhost:8004/h5/map/map`
