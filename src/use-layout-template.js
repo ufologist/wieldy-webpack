@@ -45,7 +45,9 @@ module.exports = function(templateParams) {
 
     // 获取页面模版的内容
     try {
-        templateContent = fs.readFileSync(layout.templateFile, 'utf8');
+        if (layout.templateFile) {
+            templateContent = fs.readFileSync(layout.templateFile, 'utf8');
+        }
     } catch (error) {
         console.error('read template content fail', error.message);
         throw error;

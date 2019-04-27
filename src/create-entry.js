@@ -119,9 +119,9 @@ function createEntry(entryJsFile, entryHtmlFile, options) {
     }, options);
 
     var srcBasePath = path.posix.resolve(options.srcBase);
-    var entryJsPath = path.posix.resolve(options.srcBase, entryJsFile);
-    var entryHtmlPath = path.posix.resolve(options.srcBase, entryHtmlFile);
 
+    // 生成 webpack 的 entry 配置
+    var entryJsPath = path.posix.resolve(options.srcBase, entryJsFile);
     var entry = {};
     // 获取相对于 src 根目录的路径名
     // 例如: src/index.js       -> index.js
@@ -131,7 +131,16 @@ function createEntry(entryJsFile, entryHtmlFile, options) {
     entryName = entryName.substring(0, entryName.lastIndexOf('.'));
     entry[entryName] = entryJsPath;
 
-    var htmlOutputPath = path.posix.relative(srcBasePath, entryHtmlPath);
+    // 生成 HtmlWebpackPlugin 的模版配置
+    var entryHtmlPath = '';
+    var htmlOutputPath = '';
+    if (entryHtmlFile) {
+        entryHtmlPath = path.posix.resolve(options.srcBase, entryHtmlFile);
+        htmlOutputPath = path.posix.relative(srcBasePath, entryHtmlPath);
+    } else { // 默认输出的 html 文件名为 entry 的名称, 例如 index/index -> index/index.html
+        htmlOutputPath = entryName + '.html';
+    }
+
     var htmlPluginOptions = {
         title: options.title,
         filename: htmlOutputPath,

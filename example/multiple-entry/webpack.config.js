@@ -14,6 +14,7 @@ function addEntries(env, webpackConfig) {
         setChunks: true
     }).addToWebpackConfig(webpackConfig);
 
+    // 使用 layout 机制
     wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
         title: 'wieldy-webpack 多入口示例项目 about',
         env: env,
@@ -21,6 +22,24 @@ function addEntries(env, webpackConfig) {
     }).useLayout('layout.html', {
         env: {
             __body_start__: '<p>测试</p>'
+        }
+    }).addToWebpackConfig(webpackConfig);
+
+    // 使用 layout 机制时可以不指定入口的 html 文件
+    wieldyWebpack.createEntry('login/login.js', '', {
+        title: 'wieldy-webpack 多入口示例项目 login',
+        env: env,
+        setChunks: true
+    }).useLayout('layout.html', {
+        env: {
+            __body_start__: `
+                <h1>登录</h1>
+                <ul>
+                    <li><a href="/index.html">首页</a></li>
+                    <li><a href="/about/about.html">关于</a></li>
+                    <li><a href="/login/login.html">登录</a></li>
+                </ul>
+            `
         }
     }).addToWebpackConfig(webpackConfig);
 }
