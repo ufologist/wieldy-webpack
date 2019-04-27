@@ -24,7 +24,7 @@ function mergeWpkConfig(env) {
     var dirWpkConfig = fs.existsSync(dirWpkFile) ? require(dirWpkFile) : {};
 
     // 递归合并对象, 但不会合并数组
-    var mergedWpkConfig = merge.recursive(defaultWpkConfig, globalWpkConfig, dirWpkConfig);
+    var mergedWpkConfig = merge.recursive(true, defaultWpkConfig, globalWpkConfig, dirWpkConfig);
 
     mergedWpkConfig = adjustWpkConfig(env, mergedWpkConfig);
 

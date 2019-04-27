@@ -18,7 +18,11 @@ function addEntries(env, webpackConfig) {
         title: 'wieldy-webpack 多入口示例项目 about',
         env: env,
         setChunks: true
-    }).useLayout('layout.html').addToWebpackConfig(webpackConfig);
+    }).useLayout('layout.html', {
+        env: {
+            __body_start__: '<p>测试</p>'
+        }
+    }).addToWebpackConfig(webpackConfig);
 }
 
 module.exports = function(env) {

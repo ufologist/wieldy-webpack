@@ -1,22 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html <% if (htmlWebpackPlugin.options.env.__html_attr__) { %><%= htmlWebpackPlugin.options.env.__html_attr__ %><% } %>>
 <head>
     <meta charset="UTF-8">
+    <% if (htmlWebpackPlugin.options.env.__performance_monitor__ !== false) { %>
+    <!-- 性能监控(ARMS) -->
+    <script>
+    !(function(c,b,d,a){
+        c[a]||(c[a]={});
+        c[a].config={
+            pid:'<%= htmlWebpackPlugin.options.env.__performance_monitor_app_id__ ? htmlWebpackPlugin.options.env.__performance_monitor_app_id__ : "abc@123" %>',
+            imgUrl:"https://arms-retcode.aliyuncs.com/r.png?",
+            sendResource:true,
+            useFmp:true
+        };
+        with(b)with(body)with(insertBefore(createElement("script"),firstChild))setAttribute("crossorigin","",src=d)
+    })(window,document,"https://retcode.alicdn.com/retcode/bl.js","__bl");
+    </script>
+    <% } %>
     <% if (htmlWebpackPlugin.options.env.__mode__ !== 'prod') { %>
-    <script src="//unpkg.com/vconsole@3.3.0/dist/vconsole.min.js"></script>
-    <script>window.vConsole = new VConsole();</script>
+    <!-- 调试 -->
+    <script src="//unpkg.com/vconsole@3.3.0/dist/vconsole.min.js"></script><script>window.vConsole = new VConsole();</script>
+    <script src="//unpkg.com/eruda@1.5.4/eruda.min.js"></script><script>eruda.init();</script>
     <% } %>
+    <% if (htmlWebpackPlugin.options.env.__exception_monitor__ !== false) { %>
+    <!-- 异常监控(Sentry, Fundebug) -->
+    <script src="//browser.sentry-cdn.com/5.1.1/bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+    Sentry.init({
+        dsn: '<%= htmlWebpackPlugin.options.env.__exception_monitor_dsn__ ? htmlWebpackPlugin.options.env.__exception_monitor_dsn__ : "https://abc@sentry.io/123" %>'
+    });
+    </script>
+    <% } %>
+    <!-- 头部开始 -->
     <% if (htmlWebpackPlugin.options.env.__head_start__) { %><%= htmlWebpackPlugin.options.env.__head_start__ %><% } %>
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <script>window.GLOBAL_DATA={};window.PAGE_DATA={};</script>
-    <% if (htmlWebpackPlugin.options.env.__page_data__) { %>
-    <script>PAGE_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__page_data__) : htmlWebpackPlugin.options.env.__page_data__ %>;</script>
+    <% if (htmlWebpackPlugin.options.env.__mobile_flexible_100__ === true) { %>
+    <!-- 移动端适配 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <script>!function(a,b){function c(){var b=f.getBoundingClientRect().width;b/i>540&&(b=540*i);var c=b/<%= htmlWebpackPlugin.options.env.__mobile_flexible_dw__ ? htmlWebpackPlugin.options.env.__mobile_flexible_dw__ : 750 %>*100;f.style.fontSize=c+"px",k.rem=a.rem=c}var d,e=a.document,f=e.documentElement,g=e.querySelector('meta[name="viewport"]'),h=e.querySelector('meta[name="flexible"]'),i=0,j=0,k=b.flexible||(b.flexible={});if(g){console.warn("将根据已有的meta标签来设置缩放比例");var l=g.getAttribute("content").match(/initial\-scale=([\d\.]+)/);l&&(j=parseFloat(l[1]),i=parseInt(1/j))}else if(h){var m=h.getAttribute("content");if(m){var n=m.match(/initial\-dpr=([\d\.]+)/),o=m.match(/maximum\-dpr=([\d\.]+)/);n&&(i=parseFloat(n[1]),j=parseFloat((1/i).toFixed(2))),o&&(i=parseFloat(o[1]),j=parseFloat((1/i).toFixed(2)))}}if(!i&&!j){var p=(a.navigator.appVersion.match(/android/gi),a.navigator.appVersion.match(/iphone/gi)),q=a.devicePixelRatio;i=p?q>=3&&(!i||i>=3)?3:q>=2&&(!i||i>=2)?2:1:1,j=1/i}if(f.setAttribute("data-dpr",i),!g)if(g=e.createElement("meta"),g.setAttribute("name","viewport"),g.setAttribute("content","initial-scale="+j+", maximum-scale="+j+", minimum-scale="+j+", user-scalable=no"),f.firstElementChild)f.firstElementChild.appendChild(g);else{var r=e.createElement("div");r.appendChild(g),e.write(r.innerHTML)}a.addEventListener("resize",function(){clearTimeout(d),d=setTimeout(c,300)},!1),a.addEventListener("pageshow",function(a){a.persisted&&(clearTimeout(d),d=setTimeout(c,300))},!1),"complete"===e.readyState?e.body.style.fontSize=12*i+"px":e.addEventListener("DOMContentLoaded",function(){e.body.style.fontSize=12*i+"px"},!1),c(),k.dpr=a.dpr=i,k.refreshRem=c,k.rem2px=function(a){var b=parseFloat(a)*this.rem;return"string"==typeof a&&a.match(/rem$/)&&(b+="px"),b},k.px2rem=function(a){var b=parseFloat(a)/this.rem;return"string"==typeof a&&a.match(/px$/)&&(b+="rem"),b}}(window,window.lib||(window.lib={}));</script>
     <% } %>
+    <% if (htmlWebpackPlugin.options.env.__mobile_flexible__ === true) { %>
+    <!-- 移动端适配 -->
+    <script>!function(a,b){function c(){var b=f.getBoundingClientRect().width;b/i>540&&(b=540*i);var c=b/10;f.style.fontSize=c+"px",k.rem=a.rem=c}var d,e=a.document,f=e.documentElement,g=e.querySelector('meta[name="viewport"]'),h=e.querySelector('meta[name="flexible"]'),i=0,j=0,k=b.flexible||(b.flexible={});if(g){console.warn("将根据已有的meta标签来设置缩放比例");var l=g.getAttribute("content").match(/initial\-scale=([\d\.]+)/);l&&(j=parseFloat(l[1]),i=parseInt(1/j))}else if(h){var m=h.getAttribute("content");if(m){var n=m.match(/initial\-dpr=([\d\.]+)/),o=m.match(/maximum\-dpr=([\d\.]+)/);n&&(i=parseFloat(n[1]),j=parseFloat((1/i).toFixed(2))),o&&(i=parseFloat(o[1]),j=parseFloat((1/i).toFixed(2)))}}if(!i&&!j){var p=(a.navigator.appVersion.match(/android/gi),a.navigator.appVersion.match(/iphone/gi)),q=a.devicePixelRatio;i=p?q>=3&&(!i||i>=3)?3:q>=2&&(!i||i>=2)?2:1:1,j=1/i}if(f.setAttribute("data-dpr",i),!g)if(g=e.createElement("meta"),g.setAttribute("name","viewport"),g.setAttribute("content","initial-scale="+j+", maximum-scale="+j+", minimum-scale="+j+", user-scalable=no"),f.firstElementChild)f.firstElementChild.appendChild(g);else{var r=e.createElement("div");r.appendChild(g),e.write(r.innerHTML)}a.addEventListener("resize",function(){clearTimeout(d),d=setTimeout(c,300)},!1),a.addEventListener("pageshow",function(a){a.persisted&&(clearTimeout(d),d=setTimeout(c,300))},!1),"complete"===e.readyState?e.body.style.fontSize=12*i+"px":e.addEventListener("DOMContentLoaded",function(){e.body.style.fontSize=12*i+"px"},!1),c(),k.dpr=a.dpr=i,k.refreshRem=c,k.rem2px=function(a){var b=parseFloat(a)*this.rem;return"string"==typeof a&&a.match(/rem$/)&&(b+="px"),b},k.px2rem=function(a){var b=parseFloat(a)/this.rem;return"string"==typeof a&&a.match(/px$/)&&(b+="rem"),b}}(window,window.lib||(window.lib={}));</script>
+    <% } %>
+    <!-- 页面标题 -->
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- 全局数据 -->
+    <script>
+    window.GLOBAL_DATA = {}; window.PAGE_DATA = {};
+    <% if (htmlWebpackPlugin.options.env.__global_data__) { %>
+    GLOBAL_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__global_data__) : htmlWebpackPlugin.options.env.__global_data__ %>;
+    <% } %>
+    <% if (htmlWebpackPlugin.options.env.__page_data__) { %>
+    PAGE_DATA = <%= htmlWebpackPlugin.options.env.__mode__ === 'dev' ? JSON.stringify(htmlWebpackPlugin.options.env.__page_data__) : htmlWebpackPlugin.options.env.__page_data__ %>;
+    <% } %>
+    </script>
+    <!-- 统计 -->
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement('script');
+        hm.src = 'https://hm.baidu.com/hm.js?<%= htmlWebpackPlugin.options.env.__baidu_hm_id__ ? htmlWebpackPlugin.options.env.__baidu_hm_id__ : "abc123" %>';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <!-- 头部结束 -->
     <% if (htmlWebpackPlugin.options.env.__head_end__) { %><%= htmlWebpackPlugin.options.env.__head_end__ %><% } %>
 </head>
-<body>
+<body <% if (htmlWebpackPlugin.options.env.__body_attr__) { %><%= htmlWebpackPlugin.options.env.__body_attr__ %><% } %>>
+<!-- 主体开始 -->
 <% if (htmlWebpackPlugin.options.env.__body_start__) { %><%= htmlWebpackPlugin.options.env.__body_start__ %><% } %>
 <!-- body -->
+<!-- 主体结束 -->
 <% if (htmlWebpackPlugin.options.env.__body_end__) { %><%= htmlWebpackPlugin.options.env.__body_end__ %><% } %>
 </body>
 </html>

@@ -2,17 +2,19 @@ var path = require('path');
 var fs = require('fs');
 
 var _ = require('lodash');
+var merge = require('merge');
 
 /**
  * 处理 layout 的模版页面
  * 
  * @param {object} templateParams
- * @param {string} templateParams.htmlWebpackPlugin.options.__layout__.options
+ * @param {object} templateParams.htmlWebpackPlugin.options.__layout__.options
  * @param {string} templateParams.htmlWebpackPlugin.options.__layout__.layoutFile
  * @param {string} templateParams.htmlWebpackPlugin.options.__layout__.templateFile
  */
 module.exports = function(templateParams) {
-    var layout = templateParams.htmlWebpackPlugin.options.__layout__;
+    var htmlWebpackPlugin = templateParams.htmlWebpackPlugin;
+    var layout = htmlWebpackPlugin.options.__layout__;
 
     console.log('------使用 layout 机制------');
     console.log(JSON.stringify(layout, null, 4));
@@ -51,8 +53,10 @@ module.exports = function(templateParams) {
 
     // 以页面模版的内容替换掉 layout 内容中占位的内容
     html = layoutContent.replace(layout.options.placeholder, templateContent);
+    // 合并环境变量
+    htmlWebpackPlugin.options.env = merge.recursive(true, htmlWebpackPlugin.options.env, layout.options.env);
     // 根据数据生成 HTML 页面的内容
     return _.template(html)({
-        htmlWebpackPlugin: templateParams.htmlWebpackPlugin
+        htmlWebpackPlugin: htmlWebpackPlugin
     });
 };

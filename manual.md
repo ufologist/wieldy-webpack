@@ -257,3 +257,16 @@ dev: {
       isContent: true
   }).addToWebpackConfig(webpackConfig);
   ```
+* 设置个性化 `env`
+
+  ```javascript
+  wieldyWebpack.createEntry('about/about.js', 'about/about.html', {
+      title: 'wieldy-webpack 多入口示例项目 about',
+      env: env,
+      setChunks: true
+  }).useLayout(path.resolve('node_modules/foobar/layout.html'), {
+      env: {
+          __body_start__: '测试'
+      }
+  }).addToWebpackConfig(webpackConfig);
+  ```

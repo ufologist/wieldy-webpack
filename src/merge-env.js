@@ -41,7 +41,7 @@ function mergeEnv(env) {
     var dirEnvConfig = fs.existsSync(dirEnvFile) ? require(dirEnvFile) : {};
 
     // 递归合并对象, 但不会合并数组
-    var mergedEnv = merge.recursive(defaultEnvConfig[env.__mode__], globalEnvConfig[env.__mode__], dirEnvConfig[env.__mode__], env);
+    var mergedEnv = merge.recursive(true, defaultEnvConfig[env.__mode__], globalEnvConfig[env.__mode__], dirEnvConfig[env.__mode__], env);
 
     mergedEnv = proccessPublicPath(mergedEnv);
 
