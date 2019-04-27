@@ -64,6 +64,11 @@
 * 通过 overlay 显示错误信息
 * 扩展开启 mock server 功能
 
+### 默认规则
+
+* `__public_path__` = `__public_base_path__ + (env.__dir__ || pkg.name)`
+* `__ftp_path__` = `__ftp_base_path__ + (env.__dir__ || pkg.name)`
+
 ## 多环境构建
 
 先讲一讲为什么需要支持多环境构建, 因为
@@ -227,6 +232,27 @@ dev: {
 ### 使用方法
 
 `createEntry().useLayout(file, options)`
+
+* 使用 layout 机制时创建 entry 可以不指定入口的 html 文件
+
+  ```javascript
+  wieldyWebpack.createEntry('login/login.js', '', {
+      title: 'wieldy-webpack 多入口示例项目 login',
+      env: env,
+      setChunks: true
+  }).useLayout('layout.html', {
+      env: {
+          __body_start__: `
+              <h1>登录</h1>
+              <ul>
+                  <li><a href="/index.html">首页</a></li>
+                  <li><a href="/about/about.html">关于</a></li>
+                  <li><a href="/login/login.html">登录</a></li>
+              </ul>
+          `
+      }
+  }).addToWebpackConfig(webpackConfig);
+  ```
 
 * 默认读取 `src` 目录下面的 layout 文件, 可以通过 `options.srcBase` 来指定目录
 

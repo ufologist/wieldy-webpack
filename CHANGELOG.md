@@ -1,5 +1,10 @@
 # CHANGELOG
 
+* v1.2.0 2019-4-27
+
+  * `layout` 机制增加 `env` 参数, 便于每个页面做个性化设置
+  * 使用 `layout` 机制时创建 entry 可以不指定入口的 html 文件, 即: `wieldyWebpack.createEntry('login/login.js', '')`
+
 * v1.1.0 2019-3-29
 
   增加了入口页面的 `layout` 机制
