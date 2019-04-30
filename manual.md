@@ -218,13 +218,13 @@ dev: {
 </head>
 <body>
 <% if (htmlWebpackPlugin.options.env.__body_start__) { %><%= htmlWebpackPlugin.options.env.__body_start__ %><% } %>
-<!-- body -->
+<!-- body --><!-- /body -->
 <% if (htmlWebpackPlugin.options.env.__body_end__) { %><%= htmlWebpackPlugin.options.env.__body_end__ %><% } %>
 </body>
 </html>
 ```
 
-`index.html` 只需要关注自己的内容, 会以它内容替换掉 `<!-- body -->`(可以通过 `options.placeholder` 来配置)
+`index.html` 只需要关注自己的内容, 会以它的内容替换掉 `<!-- body --><!-- /body -->`(可以通过 `options.placeholder` 来配置)
 ```html
 <div>index 页面</div>
 ```
