@@ -60,7 +60,7 @@ function Entry(entry, htmlPlugin) {
  * @param {object} options
  * @param {string} [options.isContent=false] 将 `layoutFile` 参数视作 layout 文件的内容
  * @param {string} [options.srcBase='src'] src 的根目录
- * @param {string} [options.placeholder='<!-- body -->'] 要替换的占位文字
+ * @param {string|RegExp} [options.placeholder=/<!--\sbody\s-->[\s\S]*<!--\s\/body\s-->/] 要替换的占位文字
  * @param {object} [options.env] 页面的环境配置, 会与全局的 HtmlWebpackPlugin.options.env 做合并
  * @return {Entry} this
  */
@@ -68,7 +68,7 @@ Entry.prototype.useLayout = function(layoutFile, options) {
     options = Object.assign({
         isContent: false,
         srcBase: 'src',
-        placeholder: '<!-- body -->'
+        placeholder: /<!--\sbody\s-->[\s\S]*<!--\s\/body\s-->/
     }, options);
 
     this.htmlPlugin.options.__layout__ = {

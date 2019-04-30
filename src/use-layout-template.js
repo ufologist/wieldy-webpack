@@ -54,9 +54,15 @@ module.exports = function(templateParams) {
     }
 
     // 以页面模版的内容替换掉 layout 内容中占位的内容
-    html = layoutContent.replace(layout.options.placeholder, templateContent);
+    if (templateContent) {
+        html = layoutContent.replace(layout.options.placeholder, templateContent);
+    } else {
+        html = layoutContent;
+    }
+
     // 合并环境变量
     htmlWebpackPlugin.options.env = merge.recursive(true, htmlWebpackPlugin.options.env, layout.options.env);
+
     // 根据数据生成 HTML 页面的内容
     return _.template(html)({
         htmlWebpackPlugin: htmlWebpackPlugin

@@ -94,6 +94,7 @@ module.exports = function(env) {
 
 * `wieldyWebpack.createWebpackConfig` 创建 webpack 配置
 * `wieldyWebpack.createEntry` 创建 entry(包括 HTML 入口)
+* `wieldyWebpack.useLayout` 使用 layout 模版
 
 ## 常见问题
 
