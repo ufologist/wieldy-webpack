@@ -4,6 +4,8 @@
 
 `wieldy-webpack` 构建配置文件: `wpk.js`, 配置的优先级: `./src/wpk.js > ./wpk.js > 默认的 wpk.js`
 
+`wpk.js` 支持直接导出配置或者导出一个方法返回配置(此时会传入 `env` 环境变量)
+
 ### 默认的配置项
 
 * 构建输出的目录(`dist`)

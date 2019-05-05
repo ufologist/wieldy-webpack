@@ -18,10 +18,18 @@ function mergeWpkConfig(env) {
     // 项目全局配置
     var globalWpkFile = path.resolve(process.cwd(), 'wpk.js');
     var globalWpkConfig = fs.existsSync(globalWpkFile) ? require(globalWpkFile) : {};
+    // 如果配置模块是一个方法, 则传入 env
+    if (typeof globalWpkConfig === 'function') {
+        globalWpkConfig = globalWpkConfig(env);
+    }
 
     // 目录配置
     var dirWpkFile = path.resolve(process.cwd(), 'src', env.__dir__, 'wpk.js');
     var dirWpkConfig = fs.existsSync(dirWpkFile) ? require(dirWpkFile) : {};
+    // 如果配置模块是一个方法, 则传入 env
+    if (typeof dirWpkConfig === 'function') {
+        dirWpkConfig = dirWpkConfig(env);
+    }
 
     // 递归合并对象, 但不会合并数组
     var mergedWpkConfig = merge.recursive(true, defaultWpkConfig, globalWpkConfig, dirWpkConfig);
