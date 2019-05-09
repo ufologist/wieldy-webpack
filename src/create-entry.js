@@ -1,4 +1,8 @@
 var path = require('path');
+var fs = require('fs');
+
+var _ = require('lodash');
+var merge = require('merge');
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -71,11 +75,53 @@ Entry.prototype.useLayout = function(layoutFile, options) {
         placeholder: /<!--\sbody\s-->[\s\S]*<!--\s\/body\s-->/
     }, options);
 
+    // 合并环境变量
+    this.htmlPlugin.options.env = merge.recursive(true, this.htmlPlugin.options.env, options.env);
+
+    var layoutContent = '';
+    var templateFile = this.htmlPlugin.options.template;
+    var templateContent = '';
+
+    // 获取 layout 的内容
+    if (options.isContent) {
+        layoutContent = layoutFile;
+    } else {
+        var layoutFilePath = '';
+        if (path.isAbsolute(layoutFile)) {
+            layoutFilePath = layoutFile;
+        } else {
+            layoutFilePath = path.resolve(options.srcBase, layoutFile);
+        }
+
+        try {
+            layoutContent = fs.readFileSync(layoutFilePath, 'utf8');
+        } catch (error) {
+            console.error('read layout content fail', error.message);
+            throw error;
+        }
+    }
+
+    // 获取页面模版的内容
+    try {
+        if (templateFile) {
+            templateContent = fs.readFileSync(templateFile, 'utf8');
+        }
+    } catch (error) {
+        console.error('read template content fail', error.message);
+        throw error;
+    }
+
     this.htmlPlugin.options.__layout__ = {
+        _template: _.template,
         options: options,
-        layoutFile: layoutFile,
-        templateFile: this.htmlPlugin.options.template
+        layoutContent: layoutContent,
+        templateContent: templateContent
     };
+
+    // 开启 chunk-name-resolver.js 之后,
+    // template 指向的 js 文件内不能导入其他模块,
+    // 否则 calcChunkHash 时拿到的 m.context 为 null, m.request 为 'path'
+    // 因此必须将逻辑封装在 useLayout 方法中
     this.htmlPlugin.options.template = __dirname + '/use-layout-template.js';
 
     // TODO
