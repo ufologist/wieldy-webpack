@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.4.1 2019-5-9
+
+  * fixbug: 开启 `chunk-name-resolver.js` 之后, template 指向的 js 文件内不能导入其他模块, 否则 `calcChunkHash` 时拿到的 `m.context` 为 null, `m.request` 为 'path', 因此必须将逻辑封装由 `use-layout-template.js` 转到 `useLayout` 方法中
+
 * v1.4.0 2019-5-5
 
   * 优化 `wpk.js` 的配置方式, 支持导出方法传入 `env` 环境变量, 这样便于根据不同的环境来生成不同的配置
