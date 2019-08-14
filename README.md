@@ -1,5 +1,7 @@
 # wieldy-webpack
 
+推荐迁移到 [`vue-cli-plugin-wieldy-webpack`](migrate-vue-cli3.md)
+
 [![NPM version][npm-image]][npm-url] [![changelog][changelog-image]][changelog-url] [![license][license-image]][license-url]
 
 [npm-image]: https://img.shields.io/npm/v/wieldy-webpack.svg?style=flat-square
