@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.4.2 2020-2-15
+
+  * fix: 由于 `image-webpack-loader@3.x` 版本太老了, 老是安装失败, 升级到 `4.x` 版本
+
 * v1.4.1 2019-5-9
 
   * fixbug: 开启 `chunk-name-resolver.js` 之后, template 指向的 js 文件内不能导入其他模块, 否则 `calcChunkHash` 时拿到的 `m.context` 为 null, `m.request` 为 'path', 因此必须将逻辑封装由 `use-layout-template.js` 转到 `useLayout` 方法中
