@@ -21,12 +21,12 @@
     * 总是安装失败罪魁祸首算是找到了: 是因为我们不明所以地打不开某个网站造成的, 都不好意思跟外国友人提需求了
     * 那么我们自建修复包吧
 
-  ## 自建修复包(共计发包 16 个)
+  ## 自建修复包(共计发包 18 个)
   
   ### 梳理依赖
   
   ```
-  * vue-cli-plugin-wieldy-webpack@1.0.3 => vue-cli-plugin-wieldy-webpack@1.0.4
+  * vue-cli-plugin-wieldy-webpack@1.0.3 => vue-cli-plugin-wieldy-webpack@1.0.5
     * image-webpack-loader@5.1.0        => image-webpack-loader-coding-net-vendor@5.1.0
       * imagemin@7.0.1                  => imagemin-coding-net-vendor@7.0.1
         * imagemin-jpegtran@6.0.0       => imagemin-jpegtran-coding-net-vendor@6.0.0
@@ -43,7 +43,10 @@
         * cwebp-bin@5.1.0               => cwebp-bin-coding-net-vendor@5.1.0
       * imagemin-svgo
   * wieldy-webpack@1.4.2                => wieldy-webpack@1.4.3
-    * image-webpack-loader^4.6.0 升级到 5.1.0
+    * image-webpack-loader^4.6.0        升级到 5.1.0
+  * fe-common-build@0.6.4               => fe-common-build@0.6.7
+    * gulp-imagemin@^3.3.0"             => gulp-imagemin-coding-net-vendor@6.2.0
+    * imagemin-pngquant@^5.1.0"         升级到 6.0.1
   ```
   
   ### 修改底层依赖包(`xxx-bin` 这一类的包)
