@@ -28,7 +28,7 @@ function getImgLoaders(wpkConfig, env) {
     }];
     if (env.__mode__ != 'dev') { // 非开发模式才做图片压缩
         imgLoaders.push({
-            loader: 'image-webpack-loader',
+            loader: 'image-webpack-loader-coding-net-vendor',
             options: wpkConfig.imageWebpackLoader
         });
     }

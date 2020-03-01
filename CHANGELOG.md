@@ -1,5 +1,102 @@
 # CHANGELOG
 
+* v1.4.3 2020-3-1
+
+  * fix: 由于网络原因使用 `image-webpack-loader-coding-net-vendor` 替换掉 `image-webpack-loader`
+
+  # imagemin 总是安装失败, 如何解决
+
+  ## 分析问题
+
+  * 寻找可替换方案(暂时没有找到不依赖本地包的图片优化包)
+    * https://github.com/tinify/tinify-nodejs 500张每个月
+    * https://github.com/dkunin/optimizilla-cli 也是上传到一个网站, 网站的可用性未知
+  * 定位安装失败的原因
+    * 以 `jpegtran-bin` 为例
+    * `jpegtran pre-build test failed`
+    * 查看代码(`lib/index.js` 和 `lib/install.js`)得知
+      * 因为 [`jpegtran-bin`](https://unpkg.com/browse/jpegtran-bin@4.0.0/) 没有在发布的包中包含 `vendor/` 文件夹中的分平台可执行文件(猜测可能是版权的问题)
+      * 会由 `bin-wrapper` 去下载可执行文件 `https://raw.githubusercontent.com/imagemin/jpegtran-bin/v4.0.0/vendor/win/x86/jpegtran.exe`, 但由于网络问题, 访问不到, 造成下载失败了(会卡在这里很久)
+      * 失败后会走本地编译出可执行文件的方案(在这里由于依赖各种操作系统的环境, 很容易失败) 
+    * 总是安装失败罪魁祸首算是找到了: 是因为我们不明所以地打不开某个网站造成的, 都不好意思跟外国友人提需求了
+    * 那么我们自建修复包吧
+
+  ## 自建修复包(共计发包 16 个)
+  
+  ### 梳理依赖
+  
+  ```
+  * vue-cli-plugin-wieldy-webpack@1.0.3 => vue-cli-plugin-wieldy-webpack@1.0.4
+    * image-webpack-loader@5.1.0        => image-webpack-loader-coding-net-vendor@5.1.0
+      * imagemin@7.0.1                  => imagemin-coding-net-vendor@7.0.1
+        * imagemin-jpegtran@6.0.0       => imagemin-jpegtran-coding-net-vendor@6.0.0
+          * jpegtran-bin@4.0.0          => jpegtran-bin-coding-net-vendor@4.0.0
+      * imagemin-gifsicle@6.0.1         => imagemin-gifsicle-coding-net-vendor@6.0.1
+        * gifsicle@4.0.1                => gifsicle-coding-net-vendor@4.0.1
+      * imagemin-mozjpeg@8.0.0          => imagemin-mozjpeg-coding-net-vendor@8.0.0
+        * mozjpeg@6.0.1                 => mozjpeg-coding-net-vendor@6.0.1
+      * imagemin-optipng@7.1.0          => imagemin-optipng-coding-net-vendor@7.1.0
+        * optipng-bin@6.0.0             => optipng-bin-coding-net-vendor@6.0.0
+      * imagemin-pngquant@6.0.1         => imagemin-pngquant-coding-net-vendor@6.0.1
+        * pngquant-bin@5.0.2            => pngquant-bin-coding-net-vendor@5.0.2
+      * imagemin-webp@5.1.0             => imagemin-webp-coding-net-vendor@5.1.0
+        * cwebp-bin@5.1.0               => cwebp-bin-coding-net-vendor@5.1.0
+      * imagemin-svgo
+  * wieldy-webpack@1.4.2                => wieldy-webpack@1.4.3
+    * image-webpack-loader^4.6.0 升级到 5.1.0
+  ```
+  
+  ### 修改底层依赖包(`xxx-bin` 这一类的包)
+  
+  * 找到依赖的仓库和版本
+    * 例如: `https://github.com/imagemin/optipng-bin.git`
+    * 例如: `6.0.0`
+  * 本地 clone GitHub 仓库
+  * 重置 master 到对应版本的 tag
+  * 创建 [Coding 的仓库](https://coding.net/), 因为这里的网络是好的
+  * 修改 origin remote 到 Coding 的仓库
+    * 例如: `https://e.coding.net/ufologist/optipng-bin.git`
+  * 修改 `lib/index.js` 中的 `url`
+    * 例如: `https://ufologist.coding.net/p/optipng-bin/d/optipng-bin/git/raw/v${pkg.version}/vendor/`;
+  * 修改 `package.json` 中的包名(`name`)
+    * 添加后缀: `-coding-net-vendor`
+    * 例如: `optipng-bin` => `optipng-bin-coding-net-vendor`
+  * 提交代码并 push 到 origin remote
+    * `fix: 使用 coding.net 存放 vendor`
+  * 打上对应版本号的 tag
+    * 例如: `v6.0.0`
+  * 测试安装是否正常
+    * `npm install`
+  * 发布到 npm
+    * `npm publish`
+  
+  ## 修改上层依赖包
+  
+  * 找到依赖的仓库和版本
+    * 例如: `https://github.com/imagemin/imagemin-optipng`
+    * 例如: `7.1.0`
+  * 本地 clone GitHub 仓库
+  * 重置 master 到对应版本的 tag
+  * 创建 [Coding 的仓库](https://coding.net/), 因为这里的网络是好的
+  * 修改 origin remote 到 Coding 的仓库
+    * 例如: `https://e.coding.net/ufologist/imagemin-optipng.git`
+  * 修改 `package.json` 中的包名(`name`)
+    * 添加后缀: `-coding-net-vendor`
+    * 例如: `imagemin-optipng` => `imagemin-optipng-coding-net-vendor`
+  * 修改 `package.json` 中依赖包的名称(`dependencies` 和 `devDependencies`)
+    * 添加后缀: `-coding-net-vendor`
+    * 例如: `optipng-bin` => `optipng-bin-coding-net-vendor`
+  * 修改代码中使用时的包名称
+    * 例如: `require('optipng-bin')` => `require('optipng-bin-coding-net-vendor')`
+  * 测试安装是否正常
+    * `npm install`
+  * 执行测试用例
+    * `npm test`
+  * 提交代码并 push 到远端
+    * `fix: 使用 coding-net-vendor 包`
+  * 发布到 npm
+    * `npm publish`
+
 * v1.4.2 2020-2-15
 
   * fix: 由于 `image-webpack-loader@3.x` 版本太老了, 老是安装失败, 升级到 `4.x` 版本
