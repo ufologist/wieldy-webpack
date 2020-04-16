@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.4.4 2020-4-16
+
+  * fix: 升级 `cwebp-bin-coding-net-vendor` 依赖到 `5.1.1`
+
 * v1.4.3 2020-3-1
 
   * fix: 由于网络原因使用 `image-webpack-loader-coding-net-vendor` 替换掉 `image-webpack-loader`
