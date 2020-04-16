@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.4.5 2020-4-16
+
+  * fix: 升级 `cwebp-bin-coding-net-vendor` 依赖到 `5.1.2`
+
 * v1.4.4 2020-4-16
 
   * fix: 升级 `cwebp-bin-coding-net-vendor` 依赖到 `5.1.1`

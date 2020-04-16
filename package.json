@@ -1,6 +1,6 @@
 {
   "name": "wieldy-webpack",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "易于使用的 webpack",
   "main": "src/index.js",
   "bin": "./bin/wieldy-webpack.js",
@@ -36,7 +36,7 @@
     "file-loader": "^0.11.2",
     "get-port": "^3.1.0",
     "html-webpack-plugin": "^2.29.0",
-    "image-webpack-loader-coding-net-vendor": "^5.1.1",
+    "image-webpack-loader-coding-net-vendor": "^5.1.2",
     "inline-chunks-html-webpack-plugin": "^1.2.1",
     "lodash": "^4.17.11",
     "merge": "^1.2.0",
