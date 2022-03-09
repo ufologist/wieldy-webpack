@@ -1,5 +1,9 @@
 # CHANGELOG
 
+* v1.4.6 2022-3-9
+
+  * fix: context 有可能为 null 会造成 path.relative 报错
+
 * v1.4.5 2020-4-16
 
   * fix: 升级 `cwebp-bin-coding-net-vendor` 依赖到 `5.1.2`
