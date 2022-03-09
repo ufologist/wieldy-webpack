@@ -62,7 +62,11 @@ function calcChunkHash(chunk) {
     var hash = '';
 
     var chunkModulesPath = chunk.mapModules(function(m) {
-        return path.relative(m.context, m.request);
+        if (m.context) {
+            return path.relative(m.context, m.request);
+        } else {
+            return '';
+        }
     }).join('_');
 
     hash = createHash(options.hashFunction).update(chunkModulesPath)
