@@ -1,6 +1,6 @@
 {
   "name": "wieldy-webpack",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "易于使用的 webpack",
   "main": "src/index.js",
   "bin": "./bin/wieldy-webpack.js",
